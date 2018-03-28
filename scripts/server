@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+$NTI_BIN/supervisord -n

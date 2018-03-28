@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+if [[ -d "node_modules" ]] ; then
+    echo "Dropping ./node_modules..."
+    rm -rf node_modules package-lock.json
+    if [ "$1" == "-r" ] ; then
+        npm install
+    fi
+else
+    DIRS=./**/node_modules
+    for f in $DIRS
+    do
+        if [[ -d "${f}" ]] ; then
+            (
+            cd `dirname $f`
+            echo "Dropping $f..."
+            rm -rf node_modules package-lock.json
+            if [ "$1" == "-r" ] ; then
+                npm install
+            fi
+            )
+        fi
+    done
+fi

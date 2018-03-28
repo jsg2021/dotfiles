@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+source ~/auth_host.sh
+http --timeout 60000 $AUTH POST http://localhost:8081/dataserver2/@@SyncAllLibraries Content-Type:application/json allowRemoval=true allowRemove=true

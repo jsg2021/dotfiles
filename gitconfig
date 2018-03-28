@@ -1,0 +1,28 @@
+[user]
+	name = Jonathan Grimes
+	email = jsg2021@gmail.com
+[core]
+	excludesfile = /Users/jgrimes/.dotfiles/gitignore
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[push]
+	default = simple
+[commit]
+	template = /Users/jgrimes/.dotfiles/gitcommit_template
+[pull]
+	rebase = true
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 227
+	frag = magenta bold
+	commit = 227 bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	markEmptyLines = false

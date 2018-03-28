@@ -1,0 +1,124 @@
+#!/bin/bash
+PROJECTS=~/Workspace/*
+
+run_update(){
+	echo ""
+	echo "Running post update script..."
+
+	$1/.update.sh
+			
+	echo ""
+}
+
+
+run_npm_update(){
+	if [[ -d "node_modules" ]] ; then
+		OUTDATED=`npm outdated -parseable 2>/dev/null`;
+		if [ -n "$OUTDATED" ] ; then
+			rm -rf ./node_modules ./package-lock.json
+			npm install
+		fi
+	fi;
+}
+
+
+maybe_update(){
+	if [[ -f "${1}/.update.sh" ]] ; then
+		run_update $1
+	elif [[ -f "${1}/package.json" ]] ; then
+		PWD=`pwd`
+		cd $1
+		run_npm_update
+		cd $PWD
+	fi
+}
+
+
+maybe_showOutput(){
+	if [[ ! -f "${1}/.nodetails" ]] ; then
+		if [[ $2 =~ ^Updating.*:.At\ revision\ [0-9]+.$ ]] ; then
+			echo ""
+		else
+			echo ""
+			echo "$2"
+			echo ""
+			echo ""
+		fi
+	else
+		echo " *"
+	fi
+}
+
+__ATOM_RUNNING=`ps -e | grep "[A]tom$"`
+if [[ "$__ATOM_RUNNING" == "" ]] ; then 
+	apm update --no-confirm
+fi
+
+
+for f in $PROJECTS
+do
+	if [[ -f "${f}/.ignore" ]] ; then
+		continue
+	fi
+	
+	#subversion
+	if [[ -d "${f}" && -d "${f}/.svn" && ! -L "${f}" ]] ; then
+		echo -n "Updating $f..."
+		OUTPUT=`svn up "$f"`
+		echo -n "done"
+		
+		if [[ ! -z $OUTPUT ]] ; then
+			maybe_showOutput $f "$OUTPUT"
+			maybe_update $f
+		else
+			echo ""
+		fi
+	fi
+
+
+	#git
+	if [[ -d "${f}" && -d "${f}/.git" && ! -L "${f}" ]] ; 
+	then
+		echo -n "Pulling $f..."
+		PWD=`pwd`
+		cd $f
+		
+
+		git checkout package.json &> /dev/null;
+		git checkout package-lock.json &> /dev/null;
+
+		STASH=false
+		#check for unstaged tracked files
+		if ! git diff-files --quiet; then
+			STASH=true
+		#check for staged/not committed files
+		elif ! git diff-index --quiet --cached HEAD; then
+			STASH=true
+		fi
+		
+		git fetch --all &> /dev/null; 
+		git fetch --tags &> /dev/null;
+		git fetch --prune &> /dev/null;
+		
+		if $STASH ; then
+			git stash &> /dev/null;
+		fi
+
+		OUTPUT=`git pull -r`
+		echo "done"
+		
+		if [ "$?" != "0" ]; then
+			maybe_showOutput $f "$OUTPUT"
+		else
+			maybe_update $f
+		fi
+
+		if $STASH ; then
+			git stash pop
+		fi
+		
+		cd $PWD
+	fi
+	
+done
+

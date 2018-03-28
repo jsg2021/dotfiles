@@ -1,0 +1,13 @@
+#!/bin/bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+FILES=(gitconfig profile vimrc)
+for f in "${FILES[@]}"
+do
+    if [ -f ~/.$f ]; then
+        echo "~/.$f exists...remove to use .dotfile version";
+    else
+        rm -f ~/.$f
+        ln -s "$DIR/$f" ~/.$f
+    fi
+done
