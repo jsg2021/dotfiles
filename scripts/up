@@ -49,7 +49,7 @@ maybe_showOutput(){
 	fi
 }
 
-__ATOM_RUNNING=`ps -e | grep "[A]tom$"`
+__ATOM_RUNNING=`ps -e | grep "[A]tom\\b"`
 if [[ "$__ATOM_RUNNING" == "" ]] ; then 
 	apm update --no-confirm
 fi
