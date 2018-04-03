@@ -22,7 +22,7 @@ if [ ! -f ~/.bash_sessions_disable ]; then
     exit 1;
 fi
     
-#curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.git-completion.bash
+#curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.dotfiles/git-completion.bash
 if [ -f ~/.dotfiles/git-completion.bash ]; then
   . ~/.dotfiles/git-completion.bash
 fi

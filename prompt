@@ -1,3 +1,4 @@
+RESET="\[\017\]"
 # define colors
 C_DEFAULT="\[\033[m\]"
 C_WHITE="\[\033[1m\]"
@@ -59,6 +60,20 @@ export LSCOLORS=exFxBxDxCxexexabagacad
 # H  bold light grey; looks like bright white
 # x  default foreground or background
 
+export GIT_PS1_SHOWCOLORHINTS=true
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWSTASHSTATE=true
+# export GIT_PS1_SHOWUNTRACKEDFILES=true
+# export GIT_PS1_SHOWUPSTREAM="auto"
+export GIT_PS1_DESCRIBE_STYLE="branch"
+
+#curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.dotfiles/git-prompt.sh
+if [ -f ~/.dotfiles/git-prompt.sh ]; then
+  . ~/.dotfiles/git-prompt.sh
+fi
 
 #export PS1="$C_GREEN\h$C_DEFAULT:$C_BLUE\W $C_DARKGRAY\u$C_LIGHTGREEN\$$C_DEFAULT "
-export PS1="$C_LIGHTGREEN\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w $C_DARKGRAY\$$C_DEFAULT "
+export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w $C_LIGHTPURPLE\$(__git_ps1 \"(%s)\")$C_DARKGRAY\$$C_DEFAULT "
+
+
+
