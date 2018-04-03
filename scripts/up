@@ -84,7 +84,7 @@ do
 		cd $f
 		
 
-		git checkout package.json &> /dev/null;
+		# git checkout package.json &> /dev/null;
 		git checkout package-lock.json &> /dev/null;
 
 		STASH=false
@@ -105,16 +105,17 @@ do
 		fi
 
 		OUTPUT=`git pull -r`
+
+		if $STASH ; then
+			git stash pop &> /dev/null;
+		fi
+		
 		echo "done"
 		
 		if [ "$?" != "0" ]; then
 			maybe_showOutput $f "$OUTPUT"
 		else
 			maybe_update $f
-		fi
-
-		if $STASH ; then
-			git stash pop
 		fi
 		
 		cd $PWD
