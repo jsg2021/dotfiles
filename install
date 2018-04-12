@@ -11,3 +11,11 @@ do
         ln -s "$DIR/$f" ~/.$f
     fi
 done
+
+if [ -f ~/.vim/colors/solarized.vim ]; then
+    echo "~/.vim/colors/solarized.vim exists...remove to use .dotfile version"
+    exit 1
+fi
+
+mkdir -p ~/.vim/colors
+ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
