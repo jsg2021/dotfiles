@@ -32,6 +32,8 @@ alias ls='ls -l -GFh'
 alias ll='ls -lt'
 alias grep='grep --colour=auto'
 
+alias gl='git log --graph --oneline'
+
 alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
 alias n='ps | grep '"'"'[n]ode'"'"''
 
