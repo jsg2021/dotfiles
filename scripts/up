@@ -1,5 +1,5 @@
 #!/bin/bash
-PROJECTS=~/Workspace/*
+PROJECTS=$WORKSPACE_DIR/*
 
 run_update(){
 	echo ""

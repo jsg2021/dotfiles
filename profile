@@ -8,7 +8,7 @@ fi
 
 
 export VIRTUAL_ENV=/opt/local/
-
+export WORKSPACE_DIR=~/Workspace
 
 #Setup prompt
 . ~/.dotfiles/prompt
@@ -32,20 +32,20 @@ alias ls='ls -l -GFh'
 alias ll='ls -lt'
 alias grep='grep --colour=auto'
 
-alias serverlog='tail -f ~/Workspace/buildout/var/log/pserve-stderr*'
+alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
 alias n='ps | grep '"'"'[n]ode'"'"''
 
 alias spp='git stash;git pull -r;git stash pop'
 
-alias ww='cd ~/Workspace/nti-web-app'
-alias mm='cd ~/Workspace/nti-web-mobile'
+alias ww='cd $WORKSPACE_DIR/nti-web-app'
+alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
 
 export HISTCONTROL=erasedups
 export HISTSIZE=10000
 shopt -s histappend
 
-export NTI_BUILDOUT_PATH=~/Workspace/buildout/
-export NTI_BIN=~/Workspace/buildout/bin/
+export NTI_BUILDOUT_PATH=$WORKSPACE_DIR/buildout/
+export NTI_BIN=$WORKSPACE_DIR/buildout/bin/
 
 #export CFLAGS="-I/opt/local/include -L/opt/local/lib"
 #export EDITOR="/usr/local/bin/mate -w"

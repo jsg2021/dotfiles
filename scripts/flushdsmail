@@ -1,5 +1,5 @@
 #!/bin/bash
-MAILS=~/Workspace/buildout/var/maildir/new/*
+MAILS=$WORKSPACE_DIR/buildout/var/maildir/new/*
 
 runmail(){
 	FILE=`basename $1`
