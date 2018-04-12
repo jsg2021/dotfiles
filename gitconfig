@@ -2,12 +2,12 @@
 	name = Jonathan Grimes
 	email = jsg2021@gmail.com
 [core]
-	excludesfile = /Users/jgrimes/.dotfiles/gitignore
+	excludesfile = ~/.dotfiles/gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 [push]
 	default = simple
 [commit]
-	template = /Users/jgrimes/.dotfiles/gitcommit_template
+	template = ~/.dotfiles/gitcommit_template
 [pull]
 	rebase = true
 [color]
