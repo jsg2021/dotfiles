@@ -1,3 +1,6 @@
 [submodule "vim-colors-solarized"]
 	path = vim-colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized
+[submodule "zsh/themes/spaceship-prompt"]
+	path = zsh/themes/spaceship-prompt
+	url = https://github.com/denysdovhan/spaceship-prompt.git
