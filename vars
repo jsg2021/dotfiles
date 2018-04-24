@@ -1,0 +1,17 @@
+export VIRTUAL_ENV=/opt/local/
+export WORKSPACE_DIR=~/Workspace
+
+export NTI_BUILDOUT_PATH=$WORKSPACE_DIR/buildout/
+export NTI_BIN=$WORKSPACE_DIR/buildout/bin/
+
+#export CFLAGS="-I/opt/local/include -L/opt/local/lib"
+#export EDITOR="/usr/local/bin/mate -w"
+
+export PATH=/opt/local/bin:/opt/local/sbin:$PATH
+
+export PATH=~/.dotfiles/scripts:$PATH
+export PATH=.:$PATH
+export PATH=./node_modules/.bin:$PATH
+
+export ANDROID_HOME=~/Library/Android/sdk
+export PATH=$PATH:${ANDROID_HOME}/tools

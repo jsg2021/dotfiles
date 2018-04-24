@@ -4,3 +4,6 @@
 [submodule "zsh/themes/spaceship-prompt"]
 	path = zsh/themes/spaceship-prompt
 	url = https://github.com/denysdovhan/spaceship-prompt.git
+[submodule "oh-my-zsh"]
+	path = oh-my-zsh
+	url = https://github.com/robbyrussell/oh-my-zsh.git

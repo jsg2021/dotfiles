@@ -1,0 +1,14 @@
+#alias listings to color and details
+alias ls='ls -l -GFh'
+alias ll='ls -lt'
+alias grep='grep --colour=auto'
+
+alias gl='git log --graph --oneline'
+
+alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
+alias n='ps | grep '"'"'[n]ode'"'"''
+
+alias spp='git stash;git pull -r;git stash pop'
+
+alias ww='cd $WORKSPACE_DIR/nti-web-app'
+alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
