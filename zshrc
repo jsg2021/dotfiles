@@ -12,7 +12,7 @@ ZSH_THEME="spaceship"
 
 SPACESHIP_CHAR_SYMBOL="⟩"
 # SPACESHIP_PROMPT_ADD_NEWLINE=false
-# SPACESHIP_PROMPT_SEPARATE_LINE=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
 # SPACESHIP_TIME_SHOW=true
 SPACESHIP_DIR_TRUNC=0
 # SPACESHIP_PROMPT_PREFIXES_SHOW=false
@@ -24,8 +24,8 @@ SPACESHIP_PROMPT_ORDER=(
   host          # Hostname section
   git           # Git section (git_branch + git_status)
   hg            # Mercurial section (hg_branch  + hg_status)
-  package       # Package version
-  node          # Node.js section
+  # package       # Package version
+  # node          # Node.js section
   ruby          # Ruby section
   elixir        # Elixir section
   xcode         # Xcode section
