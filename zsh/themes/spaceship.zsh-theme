@@ -1,1 +1,1 @@
-/Users/jgrimes/.dotfiles/zsh//themes/spaceship-prompt/spaceship.zsh-theme
+./spaceship-prompt/spaceship.zsh-theme
