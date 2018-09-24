@@ -9,7 +9,7 @@ alias nu="rm -rf ./node_modules package-lock.json && npm i"
 alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
 alias n='ps | grep '"'"'[n]ode'"'"''
 
-alias spp='git stash;git pull -r;git stash pop'
+alias spp='git pull --rebase --autostash'
 
 alias ww='cd $WORKSPACE_DIR/nti-web-app'
 alias mm='cd $WORKSPACE_DIR/nti-web-mobile'

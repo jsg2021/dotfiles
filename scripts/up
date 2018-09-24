@@ -87,29 +87,12 @@ do
 		# git checkout package.json &> /dev/null;
 		git checkout package-lock.json &> /dev/null;
 
-		STASH=false
-		#check for unstaged tracked files
-		if ! git diff-files --quiet; then
-			STASH=true
-		#check for staged/not committed files
-		elif ! git diff-index --quiet --cached HEAD; then
-			STASH=true
-		fi
-		
 		git fetch --all &> /dev/null; 
 		git fetch --tags &> /dev/null;
 		git fetch --prune &> /dev/null;
 		
-		if $STASH ; then
-			git stash &> /dev/null;
-		fi
+		OUTPUT=`git pull --rebase --autostash`
 
-		OUTPUT=`git pull -r`
-
-		if $STASH ; then
-			git stash pop &> /dev/null;
-		fi
-		
 		echo "done"
 		
 		if [ "$?" != "0" ]; then
