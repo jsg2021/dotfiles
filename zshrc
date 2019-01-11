@@ -113,6 +113,14 @@ source $ZSH/oh-my-zsh.sh
 source ~/.dotfiles/npm_chpwd_hook.sh
 # User configuration
 
+setopt hist_ignore_all_dups
+setopt hist_expire_dups_first
+setopt hist_save_no_dups
+setopt hist_find_no_dups
+setopt hist_no_store
+setopt hist_no_functions
+setopt hist_reduce_blanks
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
