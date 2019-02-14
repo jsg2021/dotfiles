@@ -1,0 +1,7 @@
+#!/bin/bash
+
+if [ -f ./package-lock.json ]; then
+    rm ./package-lock.json
+fi
+
+npmi

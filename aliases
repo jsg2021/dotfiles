@@ -4,7 +4,6 @@ alias ll='ls -lt'
 alias grep='grep --colour=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
-alias nu="rm -rf ./node_modules package-lock.json && npm i"
 
 alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
 alias n='ps | grep '"'"'[n]ode'"'"''

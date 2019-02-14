@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ -d ./node_modules ]; then
+    tdir=$(mktemp -d /tmp/node_modules.XXXXXXXXX)
+    mv ./node_modules $tdir
+    rm -rf $tdir &
+fi
+
+npm install
