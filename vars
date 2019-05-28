@@ -1,6 +1,7 @@
 export VIRTUAL_ENV=/opt/local/
 export WORKSPACE_DIR=~/Workspace
 
+export NTI_DEV_BROWSER="chrome > 72"
 export NTI_BUILDOUT_PATH=$WORKSPACE_DIR/buildout/
 export NTI_BIN=$WORKSPACE_DIR/buildout/bin/
 
