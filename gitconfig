@@ -1,6 +1,7 @@
 [user]
 	name = Jonathan Grimes
 	email = jsg2021@gmail.com
+	signingkey = 103F2E43AA0E4DF8
 [core]
 	excludesfile = ~/.dotfiles/gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
@@ -8,6 +9,7 @@
 	default = simple
 [commit]
 	template = ~/.dotfiles/gitcommit_template
+	gpgsign = true
 [pull]
 	rebase = true
 [color]
@@ -33,3 +35,5 @@
 	smudge = git-lfs smudge -- %f
 [rebase]
 	autostash = true
+[gpg]
+	program = gpg2
