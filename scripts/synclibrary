@@ -1,4 +1,24 @@
 #!/bin/bash
 set -e
-source ~/auth_host.sh
-http --timeout 60000 $AUTH POST http://localhost:8081/dataserver2/@@SyncAllLibraries Content-Type:application/json allowRemoval=true allowRemove=true
+if [ -f ~/auth_host.sh ]; then
+    source ~/auth_host.sh
+fi
+
+URL="http://localhost:8081/dataserver2/@@SyncAllLibraries"
+
+# strip Httpie's "--auth" arg
+AUTH_CURL="${AUTH/--auth/}"
+# strip curl's "--user" arg
+AUTH_CURL="${AUTH_CURL/--user/}"
+
+if [ "$AUTH" == "" ]; then 
+    cat <<END
+    Must set AUTH environment var. Ex:
+
+        AUTH="<user:password>"
+
+END
+    exit 1;
+fi
+
+curl -v --user $AUTH_CURL -X POST -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
