@@ -21,4 +21,4 @@ END
     exit 1;
 fi
 
-curl -v --user $AUTH_CURL -X POST -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
+curl -v --user $AUTH_CURL -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
