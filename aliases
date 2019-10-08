@@ -5,10 +5,7 @@ alias grep='grep --colour=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
-alias serverlog='tail -f $WORKSPACE_DIR/buildout/var/log/pserve-stderr*'
 alias n='ps | grep '"'"'[n]ode'"'"''
-
-alias spp='git pull --rebase --autostash'
 
 alias ww='cd $WORKSPACE_DIR/nti-web-app'
 alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
