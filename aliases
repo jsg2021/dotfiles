@@ -5,7 +5,7 @@ alias grep='grep --colour=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
-alias n='ps | grep '"'"'[n]ode'"'"''
+alias n='ps aux | grep -E "[C]OMMAND|node(\s|$)"'
 
 alias ww='cd $WORKSPACE_DIR/nti-web-app'
 alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
