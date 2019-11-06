@@ -21,4 +21,7 @@ END
     exit 1;
 fi
 
-curl -v --user $AUTH_CURL -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
+# curl -v --user $AUTH_CURL -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
+
+AUTH_CURL=`echo $AUTH_CURL | base64`
+echo curl -v -H "Authorization: Basic $AUTH_CURL" -H "Content-Type: application/json" -d '{"allowRemoval":true, "allowRemove":true}' $URL
