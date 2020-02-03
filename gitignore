@@ -28,7 +28,7 @@
 *.sql
 *.sqlite
 
-# OS generated files #
+# generated files #
 ######################
 .DS_Store
 .DS_Store?
@@ -40,10 +40,6 @@ Thumbs.db
 .gitignore
 .idea
 .ignore
-.tern-project
-.update.sh
-.snapshot-skip-npm
-Iconr
-
 .vscode
 .workspace.json
+Iconr
