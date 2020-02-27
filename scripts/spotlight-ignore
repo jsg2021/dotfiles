@@ -1,0 +1,9 @@
+#!/bin/bash
+
+file="$1/.metadata_never_index"
+
+if [ -d $1 ]; then
+    if [ ! -f $file ]; then
+        touch $file
+    fi
+fi
