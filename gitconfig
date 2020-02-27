@@ -37,3 +37,5 @@
 	autostash = true
 [gpg]
 	program = gpg2
+[url "file://"]
+	insteadOf = git+file://
