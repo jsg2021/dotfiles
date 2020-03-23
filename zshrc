@@ -14,7 +14,7 @@ SPACESHIP_CHAR_SYMBOL="⟩ "
 # SPACESHIP_PROMPT_ADD_NEWLINE=false
 SPACESHIP_PROMPT_SEPARATE_LINE=false
 # SPACESHIP_TIME_SHOW=true
-SPACESHIP_DIR_TRUNC=0
+# SPACESHIP_DIR_TRUNC=0
 # SPACESHIP_PROMPT_PREFIXES_SHOW=false
 
 SPACESHIP_PROMPT_ORDER=(
@@ -27,6 +27,7 @@ SPACESHIP_PROMPT_ORDER=(
   # package       # Package version
   # node          # Node.js section
   ruby          # Ruby section
+  elm           # Elm section
   elixir        # Elixir section
   xcode         # Xcode section
   swift         # Swift section
@@ -35,14 +36,15 @@ SPACESHIP_PROMPT_ORDER=(
   rust          # Rust section
   haskell       # Haskell Stack section
   julia         # Julia section
-  docker        # Docker section
+  # docker        # Docker section
   aws           # Amazon Web Services section
   # venv          # virtualenv section
   conda         # conda virtualenv section
-  pyenv         # Pyenv section
+  # pyenv         # Pyenv section
   dotnet        # .NET section
   ember         # Ember.js section
-  kubecontext   # Kubectl context section
+  kubectl       # Kubectl context section
+  terraform     # Terraform workspace section
   exec_time     # Execution time
   line_sep      # Line break
   battery       # Battery level and status

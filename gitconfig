@@ -36,6 +36,6 @@
 [rebase]
 	autostash = true
 [gpg]
-	program = gpg2
+	program = gpg
 [url "file://"]
 	insteadOf = git+file://
