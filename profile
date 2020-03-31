@@ -23,9 +23,6 @@ if [ ! -f ~/.bash_sessions_disable ]; then
 fi
     
 #curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.dotfiles/git-completion.bash
-if [ -f ~/.dotfiles/git-completion.bash ]; then
-  . ~/.dotfiles/git-completion.bash
-fi
-
+[ -f ~/.dotfiles/git-completion.bash ] && source ~/.dotfiles/git-completion.bash
 source ~/.dotfiles/aliases
 source ~/.dotfiles/vars

@@ -1,7 +1,14 @@
+export GREP_OPTIONS='--color=auto'
+
 #alias listings to color and details
-alias ls='ls -l -GFh'
-alias ll='ls -lt'
-alias grep='grep --colour=auto'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -lFh -G'
+else
+    alias ls='ls -lFh --color=auto'
+fi
+
+alias l.='ls -d .*'
+alias ll='ls -t'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 

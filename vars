@@ -1,10 +1,10 @@
 export WORKSPACE_DIR=~/Workspace
-
 export NTI_DEV_BROWSER="chrome > 75"
 
-export PATH="$HOME/.cargo/bin:$PATH"
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
 
+[ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
+
 #brew install br
-source ~/Library/Preferences/org.dystroy.broot/launcher/bash/br
+[ -d ~/Library ] && source ~/Library/Preferences/org.dystroy.broot/launcher/bash/br
