@@ -10,29 +10,30 @@ fi
 if ! command -v op &> /dev/null; then
     URL=https://1password.com/downloads/command-line/
     echo "1password cli missing: $URL"
-    if command -v xdg-open &> /dev/null; then
-        xdg-open $URL
-    else
-        open $URL
-    fi
     exit 1;
 fi
 
 eval 'SESSION=(${!'"OP_SESSION_"'@})'
 if [[ -z $SESSION ]]; then 
-    echo "Login required: eval $(op signin accountname)"
+    echo "Login required: eval \$(op signin accountname)"
     exit 1;
 fi
 
 if ! command -v gpg &> /dev/null; then
     echo "Skipping gpg trust restore, gpg not found."
 else    
-  op get item "gpg" | jq -r '.details.notesPlain' | gpg --import-ownertrust
+    op get item "gpg" | jq -r '.details.notesPlain' | gpg --import --allow-secret-key-import --import-options restore
 fi
 
 # op get item "ssh/id" | jq -r '.details.notesPlain'|ssh-add -
 
 mkdir -p ~/.ssh
+
 op get item "ssh/config" | jq -r '.details.notesPlain' > ~/.ssh/config
 op get item "ssh/id" | jq -r '.details.notesPlain' > ~/.ssh/id_rsa
 op get item "ssh/id" | jq -r '.details.sections[] | select(.fields).fields[] | select(.t=="public").v' > ~/.ssh/id_rsa.pub
+
+chmod 600 ~/.ssh/config
+chmod 600 ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa.pub
+ssh-add ~/.ssh/id_rsa
