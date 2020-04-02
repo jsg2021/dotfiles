@@ -1,0 +1,63 @@
+
+#!/usr/bin/env bash
+set -e
+
+eval 'SESSION=(${!'"OP_SESSION_"'@})'
+if [[ -z $SESSION ]]; then 
+    echo "Login required: eval \$(op signin accountname)"
+    exit 1;
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "jq command missing."
+    exit 1;
+fi
+
+if ! command -v base64 &> /dev/null; then
+    echo "base64 command missing."
+    exit 1;
+fi
+
+if ! command -v op &> /dev/null; then
+    URL=https://1password.com/downloads/command-line/
+    echo "1password cli missing: $URL"
+    exit 1;
+fi
+
+function create_note {
+    local TEMPLATE=$(op get template "Secure Note");
+    local JSON=$(echo $TEMPLATE | jq --arg data "$1" '.notesPlain = $data')
+    local ITEM=$(echo $JSON | op encode)
+    local ID=$(op create item 'Secure Note' "$ITEM" --title="$2" | jq -r '.uuid')
+    echo $ID
+}
+
+function create_gpg_item {
+    local TEMPLATE=$(op get template "password");
+    local JSON=$(echo $TEMPLATE | jq --arg private "$1" '{k: "concealed", n: "private", t: "Private Key", v: $private} as $p | {name: "", fields: [$p]} as $section | .password = "" | .sections = [$section]')
+    local ITEM=$(echo $JSON | op encode)
+    local ID=$(op create item 'password' "$ITEM" --title="$2" | jq -r '.uuid')
+    echo $ID
+}
+
+function create_ssh_item {
+    local TEMPLATE=$(op get template "password");
+    local JSON=$(echo $TEMPLATE | jq --arg private "$1" --arg public "$2" --arg config "$3" '{k: "concealed", n: "public", t: "Public Key", v: $public} as $p1 | {k: "concealed", n: "private", t: "Private Key", v: $private} as $p2 | {name: "", fields: [$p1,$p2]} as $section | .password = "" | .sections = [$section] | .notesPlain = $config')
+    local ITEM=$(echo $JSON | op encode)
+    local ID=$(op create item 'password' "$ITEM" --title="$4" | jq -r '.uuid')
+    echo $ID;
+}
+
+if command -v gpg &> /dev/null; then
+# Backup GPG Identity
+    GPG=$(gpg --export-secret-keys --export-options export-backup --armor | base64);
+    GPG_ID=$(create_gpg_item "$GPG" "gpg-backup")
+else
+    echo "You do not appear to have gpg. skipping."
+fi
+
+# Backup SSH Identity
+CONFIG=$(cat ~/.ssh/config);
+PRIVATE=$(cat ~/.ssh/id_rsa | base64);
+PUBLIC=$(cat ~/.ssh/id_rsa.pub);
+SSH_KEYS_ID=$(create_ssh_item "$PRIVATE" "$PUBLIC" "$CONFIG" "ssh-backup")

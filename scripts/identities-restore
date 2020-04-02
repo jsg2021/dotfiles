@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+# See: https://austincloud.guru/2018/11/27/1password-cli-tricks/
+eval 'SESSION=(${!'"OP_SESSION_"'@})'
+if [[ -z $SESSION ]]; then 
+    echo "Login required: eval \$(op signin accountname)"
+    exit 1;
+fi
+
+if ! command -v jq &> /dev/null; then
+    echo "jq command missing."
+    exit 1;
+fi
+
+if ! command -v base64 &> /dev/null; then
+    echo "base64 command missing."
+    exit 1;
+fi
+
+if ! command -v op &> /dev/null; then
+    URL=https://1password.com/downloads/command-line/
+    echo "1password cli missing: $URL"
+    exit 1;
+fi
+
+if ! command -v gpg &> /dev/null; then
+    echo "Skipping gpg trust restore, gpg not found."
+else    
+    op get item "gpg-backup" | jq -r '.details.sections[] | select(.fields).fields[] | select(.n=="private").v' | base64 --decode | gpg --import --allow-secret-key-import --import-options restore
+fi
+
+# op get item "ssh" | jq -r '.details.notesPlain'|ssh-add -
+
+mkdir -p ~/.ssh
+
+SSH_ITEM=$(op get item "ssh-backup");
+echo $SSH_ITEM | jq -r '.details.notesPlain' > ~/.ssh/config
+echo $SSH_ITEM | jq -r '.details.sections[] | select(.fields).fields[] | select(.n=="private").v' | base64 --decode > ~/.ssh/id_rsa
+echo $SSH_ITEM | jq -r '.details.sections[] | select(.fields).fields[] | select(.n=="public").v' > ~/.ssh/id_rsa.pub
+
+chmod 600 ~/.ssh/config
+chmod 600 ~/.ssh/id_rsa
+chmod 600 ~/.ssh/id_rsa.pub
+ssh-add ~/.ssh/id_rsa
