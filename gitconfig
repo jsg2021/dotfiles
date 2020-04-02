@@ -39,3 +39,5 @@
 	program = gpg
 [url "file://"]
 	insteadOf = git+file://
+[protocol]
+	version = 2
