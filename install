@@ -21,3 +21,7 @@ fi
 
 mkdir -p ~/.vim/colors
 ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
+
+if command -v dnf; then 
+    sudo dnf install -y xclip xsel
+fi

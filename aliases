@@ -15,3 +15,14 @@ alias n='ps aux | grep -E "[C]OMMAND|node(\s|$)"'
 
 alias ww='cd $WORKSPACE_DIR/nti-web-app'
 alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
+
+if ! command -v pbcopy; then
+    # alias pbcopy='xclip -selection clipboard'
+    alias pbcopy='xsel --clipboard --input'
+fi
+
+if ! command -v pbpaste; then
+    # alias pbpaste='xclip -selection clipboard -o'
+    alias pbpaste='xsel --clipboard --output'
+fi
+
