@@ -144,7 +144,7 @@ setopt hist_reduce_blanks
 source ~/.dotfiles/aliases
 source ~/.dotfiles/vars
 [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
-
+bindkey -e
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
