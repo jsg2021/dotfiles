@@ -67,13 +67,15 @@ export GIT_PS1_SHOWSTASHSTATE=true
 # export GIT_PS1_SHOWUPSTREAM="auto"
 export GIT_PS1_DESCRIBE_STYLE="branch"
 
+#export PS1="${RESET}$C_GREEN\h$C_DEFAULT:$C_BLUE\W $C_DARKGRAY\u$C_LIGHTGREEN\$$C_DEFAULT "
+export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w$C_DARKGRAY\$$C_DEFAULT "
+
 #curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.dotfiles/git-prompt.sh
 if [ -f ~/.dotfiles/git-prompt.sh ]; then
-  . ~/.dotfiles/git-prompt.sh
+  source ~/.dotfiles/git-prompt.sh
+  export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w $C_LIGHTPURPLE\$(__git_ps1 \"(%s)\")$C_DARKGRAY\$$C_DEFAULT "
 fi
 
-#export PS1="$C_GREEN\h$C_DEFAULT:$C_BLUE\W $C_DARKGRAY\u$C_LIGHTGREEN\$$C_DEFAULT "
-export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w $C_LIGHTPURPLE\$(__git_ps1 \"(%s)\")$C_DARKGRAY\$$C_DEFAULT "
 
 
 
