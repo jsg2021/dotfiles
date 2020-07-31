@@ -41,5 +41,6 @@ Thumbs.db
 .idea
 .ignore
 .vscode
+.history
 .workspace.json
 Iconr
