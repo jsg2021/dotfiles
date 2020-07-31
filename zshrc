@@ -143,7 +143,7 @@ setopt hist_reduce_blanks
 
 source ~/.dotfiles/aliases
 source ~/.dotfiles/vars
-[[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+# [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
 bindkey -e
 
 autoload zmv
