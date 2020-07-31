@@ -26,3 +26,6 @@ if ! command -v pbpaste; then
     alias pbpaste='xsel --clipboard --output'
 fi
 
+if ! command -v open; then
+    alias open='xdg-open'
+fi
