@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e;
+WINDOWS_LABEL="Windows Boot Manager"
+BOOT_ITEM=$(efibootmgr | grep "$WINDOWS_LABEL")
+# efibootmgr -n 00
+BOOT_ITEM=($BOOT_ITEM);
+BOOT_ITEM=${BOOT_ITEM[0]};
+BOOT_ITEM=${BOOT_ITEM/Boot/};
+BOOT_ITEM=${BOOT_ITEM%[*\s]*};
+
+sudo efibootmgr -n $BOOT_ITEM;
+sleep 5
+reboot
