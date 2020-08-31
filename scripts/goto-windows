@@ -9,5 +9,8 @@ BOOT_ITEM=${BOOT_ITEM/Boot/};
 BOOT_ITEM=${BOOT_ITEM%[*\s]*};
 
 sudo efibootmgr -n $BOOT_ITEM;
-sleep 5
+if [ "$1" != "-now" ]; then
+    echo "Rebooting in 5 seconds...";
+    sleep 5
+fi
 reboot

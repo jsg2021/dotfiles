@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=UEFI Firmware Setup (Reboot)
+Comment=Access the motherboard configuration utility
+Exec=systemctl reboot --firmware-setup
+Icon=system-restart
+Terminal=false
+Type=Application
+Categories=System;

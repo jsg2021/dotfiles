@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Start Windows (Reboot)
+Comment=Reboot into Windows 
+Exec=goto-windows -now
+Icon=computer
+Terminal=false
+Type=Application
+Categories=System;
