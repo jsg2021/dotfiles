@@ -13,8 +13,8 @@ alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Crese
 
 alias n='ps aux | grep -E "[C]OMMAND|node(\s|$)"'
 
-alias ww='cd $WORKSPACE_DIR/nti-web-app'
-alias mm='cd $WORKSPACE_DIR/nti-web-mobile'
+alias ww='cd $WORKSPACE_DIR/nti/app'
+alias mm='cd $WORKSPACE_DIR/nti/app-mobile'
 
 if ! command -v pbcopy; then
     # alias pbcopy='xclip -selection clipboard'
