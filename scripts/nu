@@ -1,7 +1,12 @@
 #!/bin/bash
 
+DROP_CMD='echo test rm ./package-lock.json'
+DROP=true
 if [ -f ./package-lock.json ]; then
-    rm ./package-lock.json
+    DROP=false
+    $DROP_CMD;
 fi
 
 npmi
+
+[ "$DROP" = true ] && $DROP_CMD;
