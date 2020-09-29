@@ -5,6 +5,7 @@ else
     alias ls='ls -lFh --color=auto'
 fi
 
+alias -- -="cd -"
 alias l.='ls -d .*'
 alias ll='ls -t'
 alias grep='grep --color=auto'
