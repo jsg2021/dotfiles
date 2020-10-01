@@ -106,9 +106,7 @@ ZSH_CUSTOM=~/.dotfiles/zsh/
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
-  macports
   nvm
-  osx
 )
 
 source $ZSH/oh-my-zsh.sh
