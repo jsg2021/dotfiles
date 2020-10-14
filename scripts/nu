@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DROP_CMD='rm ./package-lock.json'
+DROP_CMD='rm -f ./package-lock.json'
 DROP=true
 if [ -f ./package-lock.json ]; then
     DROP=false

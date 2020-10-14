@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e;
+
+zenity --question --width 300 --text "Are you sure you want to reboot into firmware?"
+
+systemctl reboot --firmware-setup
