@@ -3,6 +3,9 @@ export NTI_DEV_BROWSER="chrome > 75"
 
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
+if [ -d /var/lib/snapd/snap/bin ]; then
+    export PATH=$PATH:/var/lib/snapd/snap/bin
+fi
 
 [ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
 
