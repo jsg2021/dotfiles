@@ -1,3 +1,0 @@
-#!/bin/bash
-# See https://salferrarello.com/mac-pfctl-port-forwarding/
-sudo pfctl -s nat

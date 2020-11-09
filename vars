@@ -1,13 +1,10 @@
 export WORKSPACE_DIR=~/Workspace
 export NTI_DEV_BROWSER="chrome > 75"
 
+[ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
+
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
-if [ -d /var/lib/snapd/snap/bin ]; then
-    export PATH=$PATH:/var/lib/snapd/snap/bin
-fi
-
-[ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
 
 #brew install br
 [ -d ~/Library ] && source ~/Library/Preferences/org.dystroy.broot/launcher/bash/br
