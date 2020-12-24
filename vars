@@ -5,6 +5,3 @@ export NTI_DEV_BROWSER="chrome > 75"
 
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
-
-#brew install br
-[ -d ~/Library ] && source ~/Library/Preferences/org.dystroy.broot/launcher/bash/br
