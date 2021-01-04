@@ -50,3 +50,7 @@
 	insteadOf = git+file://
 [protocol]
 	version = 2
+[credential "https://github.com"]
+	helper = !gh auth git-credential
+[url "git@github.com:"]
+	insteadOf = https://github.com/
