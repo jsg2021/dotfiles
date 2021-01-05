@@ -1,5 +1,4 @@
-export WORKSPACE_DIR=~/Workspace
-export NTI_DEV_BROWSER="chrome > 75"
+# export NTI_DEV_BROWSER="last 2 Chrome versions"
 
 [ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
 
