@@ -2,5 +2,12 @@
 
 [ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
 
+export DENO_INSTALL="~/.dotfiles/deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+if [ ! -d $DENO_INSTALL ]; then
+    echo "deno/" >> ~/.dotfiles/.gitignore
+    curl -fsSL https://deno.land/x/install/install.sh | sh
+fi
+
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
