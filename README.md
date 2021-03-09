@@ -3,6 +3,14 @@ my profile &amp; utility scripts
 
 run install in terminal to link in configs.
 
+## Setup:
+```sh
+git clone git@github.com:jsg2021/dotfiles.git ~/.dotfiles
+cd ~/.dotfiles
+git submodule update --init --recursive
+./install
+```
+
 ## Signing commits
 
 ```sh
