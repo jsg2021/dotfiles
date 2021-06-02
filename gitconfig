@@ -44,6 +44,7 @@
 	smudge = git-lfs smudge -- %f
 [rebase]
 	autostash = true
+	autosquash = true
 [gpg]
 	program = gpg
 [url "file://"]
@@ -52,3 +53,5 @@
 	version = 2
 [credential "https://github.com"]
 	helper = !gh auth git-credential
+[alias]
+  fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
