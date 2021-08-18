@@ -18,16 +18,16 @@ WORKSPACE_DIR=~/Workspace
 alias ww='cd $WORKSPACE_DIR/nti/app/webapp'
 alias mm='cd $WORKSPACE_DIR/nti/app/mobile'
 
-if ! command -v pbcopy; then
+if ! command -v pbcopy > /dev/null; then
     # alias pbcopy='xclip -selection clipboard'
     alias pbcopy='xsel --clipboard --input'
 fi
 
-if ! command -v pbpaste; then
+if ! command -v pbpaste > /dev/null; then
     # alias pbpaste='xclip -selection clipboard -o'
     alias pbpaste='xsel --clipboard --output'
 fi
 
-if ! command -v open; then
+if ! command -v open > /dev/null; then
     alias open='xdg-open'
 fi
