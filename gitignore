@@ -43,5 +43,6 @@ Thumbs.db
 .ignore
 .vscode
 .history
+.secrets
 .workspace.json
 Iconr

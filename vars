@@ -11,3 +11,8 @@ fi
 
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
+
+function npr()
+{
+    npm run $1 -- $@[2,-1]
+}
