@@ -107,6 +107,7 @@ ZSH_CUSTOM=~/.dotfiles/zsh/
 plugins=(
   git
   nvm
+  rbenv # curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 )
 
 source $ZSH/oh-my-zsh.sh
