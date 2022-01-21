@@ -1,12 +1,16 @@
 #!/bin/bash
+# set -x
+cd `dirname "$0"` # this script assumes we're in the source directory
 git submodule update --init --recursive
-[ ! -d ~/.nvm ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 
+NVM_DIR=~/.nvm
+
+[ ! -d $NVM_DIR ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 # Make sure nvm is up-to-date.
 (
-  cd "$NVM_DIR"
-  git fetch --tags origin
-  git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+    cd "$NVM_DIR"
+    git fetch --tags origin
+    git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
 ) && \. "$NVM_DIR/nvm.sh"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -24,11 +28,10 @@ done
 
 if [ -f ~/.vim/colors/solarized.vim ]; then
     echo "~/.vim/colors/solarized.vim exists...remove to use .dotfile version"
-    exit 1
+else
+    mkdir -p ~/.vim/colors
+    ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
 fi
-
-mkdir -p ~/.vim/colors
-ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
 
 if command -v dnf; then 
     sudo dnf install -y xclip xsel
