@@ -1,81 +1,11 @@
-RESET="\[\017\]"
-# define colors
-C_DEFAULT="\[\033[m\]"
-C_WHITE="\[\033[1m\]"
-C_BLACK="\[\033[30m\]"
-C_RED="\[\033[31m\]"
-C_GREEN="\[\033[32m\]"
-C_YELLOW="\[\033[33m\]"
-C_BLUE="\[\033[34m\]"
-C_PURPLE="\[\033[35m\]"
-C_CYAN="\[\033[36m\]"
-C_LIGHTGRAY="\[\033[37m\]"
-C_DARKGRAY="\[\033[1;30m\]"
-C_LIGHTRED="\[\033[1;31m\]"
-C_LIGHTGREEN="\[\033[1;32m\]"
-C_LIGHTYELLOW="\[\033[1;33m\]"
-C_LIGHTBLUE="\[\033[1;34m\]"
-C_LIGHTPURPLE="\[\033[1;35m\]"
-C_LIGHTCYAN="\[\033[1;36m\]"
-C_BG_BLACK="\[\033[40m\]"
-C_BG_RED="\[\033[41m\]"
-C_BG_GREEN="\[\033[42m\]"
-C_BG_YELLOW="\[\033[43m\]"
-C_BG_BLUE="\[\033[44m\]"
-C_BG_PURPLE="\[\033[45m\]"
-C_BG_CYAN="\[\033[46m\]"
-C_BG_LIGHTGRAY="\[\033[47m\]"
-
-export CLICOLOR=1
-export LSCOLORS=exFxBxDxCxexexabagacad
-# LSCOLORS needs 11 sets of letters indicating foreground and background colors:
-#  1 directory
-#  2 symbolic link
-#  3 socket
-#  4 pipe
-#  5 executable
-#  6 block special
-#  7 character special
-#  8 executable with setuid bit set
-#  9 executable with setgid bit set
-# 10 directory writable to others, with sticky bit
-# 11 directory writable to others, without sticky bit
-
-# The possible letters to use are:
-# a  black
-# b  red
-# c  green
-# d  brown
-# e  blue
-# f  magenta
-# c  cyan
-# h  light grey
-# A  block black, usually shows up as dark grey
-# B  bold red
-# C  bold green
-# D  bold brown, usually shows up as yellow
-# E  bold blue
-# F  bold magenta
-# G  bold cyan
-# H  bold light grey; looks like bright white
-# x  default foreground or background
-
-export GIT_PS1_SHOWCOLORHINTS=true
-export GIT_PS1_SHOWDIRTYSTATE=true
-export GIT_PS1_SHOWSTASHSTATE=true
-# export GIT_PS1_SHOWUNTRACKEDFILES=true
-# export GIT_PS1_SHOWUPSTREAM="auto"
-export GIT_PS1_DESCRIBE_STYLE="branch"
-
-#export PS1="${RESET}$C_GREEN\h$C_DEFAULT:$C_BLUE\W $C_DARKGRAY\u$C_LIGHTGREEN\$$C_DEFAULT "
-export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w$C_DARKGRAY\$$C_DEFAULT "
-
-#curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ~/.dotfiles/git-prompt.sh
-if [ -f ~/.dotfiles/git-prompt.sh ]; then
-  source ~/.dotfiles/git-prompt.sh
-  export PS1="${RESET}${C_LIGHTGREEN}\u$C_DARKGRAY@$C_LIGHTBLUE\h$C_DARKGRAY: $C_LIGHTYELLOW\w $C_LIGHTPURPLE\$(__git_ps1 \"(%s)\")$C_DARKGRAY\$$C_DEFAULT "
+export STARSHIP_CONFIG=~/.dotfiles/starship.toml
+if [ ! command -v starship &>/dev/null ]; then
+  sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 fi
 
-
-
-
+if [[ "$BASH_VERSION" != "" ]]; then
+  eval "$(starship init bash)"
+fi
+if [[ "$ZSH_VERSION" != "" ]]; then
+  eval "$(starship init zsh)"
+fi

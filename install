@@ -4,7 +4,6 @@ cd `dirname "$0"` # this script assumes we're in the source directory
 git submodule update --init --recursive
 
 NVM_DIR=~/.nvm
-
 [ ! -d $NVM_DIR ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
 # Make sure nvm is up-to-date.
 (
@@ -33,7 +32,7 @@ else
     ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
 fi
 
-if command -v dnf; then 
+if command -v dnf &> /dev/null; then 
     sudo dnf install -y xclip xsel
     
     mkdir -p ~/.local/share/applications 
