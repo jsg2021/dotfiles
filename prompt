@@ -1,5 +1,5 @@
 export STARSHIP_CONFIG=~/.dotfiles/starship.toml
-if [ ! command -v starship &>/dev/null ]; then
+if ! command -v starship &>/dev/null; then
   sh -c "$(curl -fsSL https://starship.rs/install.sh)"
 fi
 
