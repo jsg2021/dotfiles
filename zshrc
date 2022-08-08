@@ -60,8 +60,9 @@ ZSH_CUSTOM=~/.dotfiles/zsh/
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
-  nvm
-  rbenv # curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
+  fnm
+  # nvm
+  # rbenv # curl -fsSL https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer | bash
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -96,7 +97,7 @@ setopt hist_reduce_blanks
 
 source ~/.dotfiles/aliases
 source ~/.dotfiles/vars
-# [[ -r $NVM_DIR/bash_completion ]] && . $NVM_DIR/bash_completion
+
 bindkey -e
 
 autoload zmv

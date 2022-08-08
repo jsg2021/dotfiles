@@ -1,42 +1,99 @@
 #!/bin/bash
-# set -x
-cd `dirname "$0"` # this script assumes we're in the source directory
-git submodule update --init --recursive
 
-NVM_DIR=~/.nvm
-[ ! -d $NVM_DIR ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-# Make sure nvm is up-to-date.
-(
-    cd "$NVM_DIR"
-    git fetch --tags origin
-    git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-) && \. "$NVM_DIR/nvm.sh"
+{ #prevent exec until fully downloaded?
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+    # set -x
+    DIR="~/.dotfiles"
 
-FILES=(gitconfig profile vimrc zshrc)
-for f in "${FILES[@]}"
-do
-    if [ -f ~/.$f ]; then
-        echo "~/.$f exists...remove to use .dotfile version";
-    else
-        rm -f ~/.$f
-        ln -s "$DIR/$f" ~/.$f
-    fi
-done
+    function fetch_files () {
+        if [ ! -d $DIR ]; then
+            git clone https://github.com/jsg2021/dotfiles.git $DIR
+        fi
 
-if [ -f ~/.vim/colors/solarized.vim ]; then
-    echo "~/.vim/colors/solarized.vim exists...remove to use .dotfile version"
-else
-    mkdir -p ~/.vim/colors
-    ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
-fi
+        cd $DIR
+        git submodule update --init --recursive
+    }
 
-if command -v dnf &> /dev/null; then 
-    sudo dnf install -y xclip xsel
+    function install_fnm () {
+        curl -fsSL https://fnm.vercel.app/install | bash
+    }
+
+    function install_nvm () {
+        NVM_DIR=~/.nvm
+        [ ! -d $NVM_DIR ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+        # Make sure nvm is up-to-date.
+        (
+            cd "$NVM_DIR"
+            git fetch --tags origin
+            git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
+        ) && \. "$NVM_DIR/nvm.sh"
+    }
+
+    function install_1password() {}
+
+    function install_github() {}
+
+    function install_homebrew() {
+        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    }
     
-    mkdir -p ~/.local/share/applications 
-    ln -s "$DIR/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop
-    ln -s "$DIR/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
-    sudo ln -s ~/.dotfiles/scripts/goto-windows /usr/local/bin/goto-windows
-fi
+    function install_configs () {
+        FILES=(gitconfig profile vimrc zshrc)
+        for f in "${FILES[@]}"
+        do
+            if [ -f ~/.$f ]; then
+                echo "~/.$f exists...remove to use .dotfile version";
+            else
+                rm -f ~/.$f
+                ln -s "$DIR/$f" ~/.$f
+            fi
+        done
+
+        if [ -f ~/.vim/colors/solarized.vim ]; then
+            echo "~/.vim/colors/solarized.vim exists...remove to use .dotfile version"
+        else
+            mkdir -p ~/.vim/colors
+            ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
+        fi
+
+
+        zsh -c "zstyle ':omz:update' mode reminder"
+        zsh -c "zstyle ':omz:update' frequency 30"
+        # set shell 
+        if [[ "$SHELL" != $(which zsh) ]]; then 
+            chsh -s $(which zsh)
+        fi
+    }
+
+    function install_linux () {
+        if command -v dnf &> /dev/null; then 
+            sudo dnf install -y xclip xsel
+        elif command -v apt-get &> /dev/null; then
+            sudo apt-get install -y xclip xsel
+        else
+            echo "Not using apt/dnf... ";
+        fi
+
+        mkdir -p ~/.local/share/applications 
+        ln -s "$DIR/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop
+        ln -s "$DIR/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
+        sudo ln -s ~/.dotfiles/scripts/goto-windows /usr/local/bin/goto-windows
+    }
+
+    function install_macos() {
+        install_homebrew
+    }
+
+
+    fetch_files
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        install_macos
+    else  
+        install_linux
+    fi
+    install_configs
+    install_fnm
+    install_1password
+    install_github
+}
