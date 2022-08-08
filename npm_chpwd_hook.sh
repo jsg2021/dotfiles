@@ -13,7 +13,7 @@ npm_chpwd_hook() {
         PATH="$(npm_chpwd_strip_path "$PRE_BIN")"
         unset PRE_BIN
     fi
-    NPM=$(which npm)
+    NPM=$(command -v npm)
     if [ -n "$NPM" ]; then
         BIN=$(npm bin)
         if [ -n "$BIN" ]; then
