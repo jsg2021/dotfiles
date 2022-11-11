@@ -66,7 +66,6 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
-source ~/.dotfiles/npm_chpwd_hook.sh
 # User configuration
 
 setopt hist_ignore_all_dups
