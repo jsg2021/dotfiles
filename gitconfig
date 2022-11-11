@@ -6,14 +6,6 @@
 	excludesfile = ~/.dotfiles/gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	editor = code --wait
-[diff]
-    tool = vscode
-[difftool "vscode"]
-    cmd = code --wait --diff $LOCAL $REMOTE
-[merge]
-    tool = vscode
-[mergetool "vscode"]
-    cmd = code --wait $MERGED
 [push]
 	default = simple
 [commit]
