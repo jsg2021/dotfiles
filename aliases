@@ -12,7 +12,7 @@ alias grep='grep --color=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 
-alias n='ps aux | grep -E "[C]OMMAND|node(\s|$)"'
+alias n='ps aux | grep -E "[C]OMMAND|((/.+/)|\s)node(\s|$)"'
 
 function npr() {
     npm run $1 -- $@[2,-1]
