@@ -6,7 +6,11 @@
     DIR="~/.dotfiles"
 
     function fetch_files () {
-        if [ ! -d $DIR ]; then
+        if [ $CODESPACES ]; then
+            echo "Running in codespaces..."
+            DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
+
+        elif [ ! -d $DIR ]; then
             git clone https://github.com/jsg2021/dotfiles.git $DIR
         fi
 
@@ -29,7 +33,12 @@
         ) && \. "$NVM_DIR/nvm.sh"
     }
 
-    function install_1password() {}
+    function install_1password() {
+        if [ $CODESPACES ]; then
+            echo "Running in codespaces...skip install_1password"
+            return
+        fi
+    }
 
     function install_github() {}
 
@@ -67,6 +76,11 @@
     }
 
     function install_linux () {
+        if [ $CODESPACES ]; then
+            echo "Running in codespaces...skip install_linux"
+            return
+        fi
+
         if command -v dnf &> /dev/null; then 
             sudo dnf install -y xclip xsel
         elif command -v apt-get &> /dev/null; then
@@ -87,6 +101,7 @@
 
 
     fetch_files
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         install_macos
     else  
