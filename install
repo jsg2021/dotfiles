@@ -1,16 +1,17 @@
 #!/bin/bash
-
+# set -x
+set -e
 { #prevent exec until fully downloaded?
 
-    # set -x
     DIR="~/.dotfiles"
 
     function fetch_files () {
-        if [ $CODESPACES ]; then
+        if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces..."
             DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
+        fi
 
-        elif [ ! -d $DIR ]; then
+        if [ ! -d $DIR ]; then
             git clone https://github.com/jsg2021/dotfiles.git $DIR
         fi
 
@@ -34,13 +35,15 @@
     }
 
     function install_1password() {
-        if [ $CODESPACES ]; then
+       if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces...skip install_1password"
             return
         fi
     }
 
-    function install_github() {}
+    function install_github() {
+        return
+    }
 
     function install_homebrew() {
         bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -76,7 +79,7 @@
     }
 
     function install_linux () {
-        if [ $CODESPACES ]; then
+       if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces...skip install_linux"
             return
         fi
