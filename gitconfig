@@ -1,18 +1,42 @@
-[user]
-	name = Jonathan Grimes
-	email = jsg2021@gmail.com
-	signingkey = 103F2E43AA0E4DF8
+[init]
+	defaultBranch = main
+[protocol]
+	version = 2
 [core]
 	excludesfile = ~/.dotfiles/gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	editor = code --wait
-[push]
-	default = simple
+
+[url "file://"]
+	insteadOf = git+file://
+[credential "https://github.com"]
+	helper = !gh auth git-credential
+
+[user]
+	name = Jonathan Grimes
+	email = jsg2021@gmail.com
+	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDgvnuTmyjW9ix1ddIqonQ2vHF5YAaQ6davtZFSm2S5BNl8P9E96yy0UX8m4Ue1ckLHc44VspNk6Xd0YtBAqPGyMrLDAuMhbtUCQB7N/2kD+jXG0zZQQq+bzcNGBU985LZKekqM1V6I51il9gbF73OBObyPoyEgUuT08VAdtYZkNv+G5vpJxbWkSYOuaLAYAdFFaFPCErD9cbqig7cqYZJX4NZlQuxSOpRRv1WKGmzEd8FLRi5CQbf6lQeUE4Vx9WrKtYeuqYF72ZzEDceyOnqT/g0Nc2zxsiaWD8QAmnHouoGVrQOn/gP3zbGYZjqvN48Ks0E9CcwHUSdTEeqtVs0j
+[gpg]
+	format = ssh
+[gpg "ssh"]
+	program = /Applications/1Password.app/Contents/MacOS/op-ssh-sign
 [commit]
 	template = ~/.dotfiles/gitcommit_template
 	gpgsign = true
 [pull]
 	rebase = true
+[push]
+	default = simple
+[rebase]
+	autostash = true
+	autosquash = true
+
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+
 [color]
 	ui = true
 [color "diff-highlight"]
@@ -29,23 +53,7 @@
 	whitespace = red reverse
 [diff-so-fancy]
 	markEmptyLines = false
-[filter "lfs"]
-	process = git-lfs filter-process
-	required = true
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-[rebase]
-	autostash = true
-	autosquash = true
-[gpg]
-	program = gpg
-[url "file://"]
-	insteadOf = git+file://
-[protocol]
-	version = 2
-[credential "https://github.com"]
-	helper = !gh auth git-credential
+
+
 [alias]
   fixup = "!git log -n 50 --pretty=format:'%h %s' --no-merges | fzf | cut -c -7 | xargs -o git commit --fixup"
-[init]
-	defaultBranch = main
