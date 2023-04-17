@@ -15,7 +15,7 @@
 [user]
 	name = Jonathan Grimes
 	email = jsg2021@gmail.com
-	signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDgvnuTmyjW9ix1ddIqonQ2vHF5YAaQ6davtZFSm2S5BNl8P9E96yy0UX8m4Ue1ckLHc44VspNk6Xd0YtBAqPGyMrLDAuMhbtUCQB7N/2kD+jXG0zZQQq+bzcNGBU985LZKekqM1V6I51il9gbF73OBObyPoyEgUuT08VAdtYZkNv+G5vpJxbWkSYOuaLAYAdFFaFPCErD9cbqig7cqYZJX4NZlQuxSOpRRv1WKGmzEd8FLRi5CQbf6lQeUE4Vx9WrKtYeuqYF72ZzEDceyOnqT/g0Nc2zxsiaWD8QAmnHouoGVrQOn/gP3zbGYZjqvN48Ks0E9CcwHUSdTEeqtVs0j
+	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbn8X8OGnCZYxq9J8aiK6whgLIq8s1h9v5uEGGuargP
 [gpg]
 	format = ssh
 [gpg "ssh"]
