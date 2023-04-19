@@ -3,7 +3,7 @@
 set -e
 { #prevent exec until fully downloaded?
 
-    DIR="~/.dotfiles"
+    DIR=~/.dotfiles
 
     function fetch_files () {
         if [ "$CODESPACES" = true ] ; then
