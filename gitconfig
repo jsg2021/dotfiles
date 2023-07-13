@@ -43,6 +43,9 @@
 	autostash = true
 	autosquash = true
 
+[interactive]
+	diffFilter = diff-so-fancy --patch
+
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true
