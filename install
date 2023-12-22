@@ -51,7 +51,7 @@ set -e
     }
     
     function install_configs () {
-        FILES=(gitconfig profile vimrc zshrc)
+        FILES=(gitconfig bash_profile vimrc zshrc)
         for f in "${FILES[@]}"
         do
             if [ -f ~/.$f ]; then
@@ -75,6 +75,10 @@ set -e
         # set shell 
         if [[ "$SHELL" != $(which zsh) ]]; then 
             chsh -s $(which zsh)
+            if [[ "$OSTYPE" == "darwin"* ]]; then
+            else
+                echo "Reboot for SHELL change to take effect."
+            fi
         fi
     }
 

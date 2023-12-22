@@ -20,10 +20,7 @@ fi
 #mac
 [ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH;
 
-export PATH=~/.dotfiles/scripts:$PATH
-export PATH=.:$PATH
-# Created by `pipx` on 2023-01-05 04:29:16
-export PATH="$PATH:/Users/jonathan/.local/bin"
+
 
 # linux
 [ -d ~/Android/Sdk/ ] && export ANDROID_HOME=~/Android/Sdk/
@@ -31,6 +28,19 @@ export PATH="$PATH:/Users/jonathan/.local/bin"
 [ -d ~/Library/Android/Sdk/ ] && export ANDROID_HOME=~/Library/Android/Sdk/
 export ANDROID_SDK_ROOT=$ANDROID_HOME
 export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+export PATH=~/.local/bin:$PATH
+export PATH=~/.dotfiles/scripts:$PATH
+export PATH=.:$PATH
+
+mkdir -p ~/.local/bin
+
+if ! command -v op-ssh-sign &> /dev/null; then
+    if [ -f /Applications/1Password.app/Contents/MacOS/op-ssh-sign ]; then
+        sudo ln -s /Applications/1Password.app/Contents/MacOS/op-ssh-sign ~/.local/bin/op-ssh-sign
+    elif [ -f /opt/1Password/op-ssh-sign ]; then
+        sudo ln -s /opt/1Password/op-ssh-sign ~/.local/bin/op-ssh-sign
+    fi
+fi
 
 if command -v fnm &> /dev/null; then
     # eval "$(fnm env --use-on-cd)"
