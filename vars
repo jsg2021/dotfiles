@@ -1,8 +1,10 @@
-DENO_INSTALL=~/.dotfiles/deno
+export DENO_INSTALL=~/.dotfiles/deno
 export PATH="$DENO_INSTALL/bin:$PATH"
 if [ ! -d $DENO_INSTALL ]; then
-    echo "deno/" >> ~/.dotfiles/.gitignore
-    curl -fsSL https://deno.land/x/install/install.sh | sh
+    if ! grep -q 'deno/' ~/.dotfiles/.gitignore2 &> /dev/null; then
+        echo "deno/" >> ~/.dotfiles/.gitignore
+        curl -fsSL https://deno.land/x/install/install.sh | sh
+    fi
 fi
 
 BUN_INSTALL=~/.bun
