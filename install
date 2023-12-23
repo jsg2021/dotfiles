@@ -35,14 +35,21 @@ set -e
     }
 
     function install_1password() {
-       if [ "$CODESPACES" = true ] ; then
+        if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces...skip install_1password"
             return
         fi
+
+        sh ./scripts/install_1password
     }
 
     function install_github() {
-        return
+        if [ "$CODESPACES" = true ] ; then
+            echo "Running in codespaces...skip install_github"
+            return
+        fi
+
+        sh ./scripts/install_github
     }
 
     function install_homebrew() {

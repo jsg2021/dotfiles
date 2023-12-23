@@ -1,0 +1,24 @@
+#!/bin/bash
+# set -x
+set -e
+{ #prevent exec until fully downloaded
+    sh ./install-pup
+
+    # AppImageLauncher service
+    if ! command -v AppImageLauncher &> /dev/null; then
+        ASSETS=$(curl -fsSL https://github.com/TheAssassin/AppImageLauncher/releases/latest | pup -n '[src*=expanded_assets] attr{src}')
+        if command -v dnf &> /dev/null; then 
+            PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=x86_64.rpm] attr{href}')
+            sudo dnf install https://github.com$PATH;
+        if
+
+        if command -v apt &> /dev/null; then
+            # not updated beyond ubuntu 18.04??
+            # PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=bionic_amd64.rpm] attr{href}')
+            # sudo apt install https://github.com$PATH;
+
+            PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=x86_64.AppImage] attr{href}')
+            curl -fsSL -o ~/Downloads/appimagelauncher-lite.AppImage $PATH
+        fi
+    fi
+}

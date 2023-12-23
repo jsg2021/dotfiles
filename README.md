@@ -5,7 +5,7 @@ run install in terminal to link in configs.
 
 ## Setup:
 ```sh
-curl -fsSL https://raw.githubusercontent.com/jsg2021/dotfiles/main/install | bash
+curl -fsSL https://raw.githubusercontent.com/jsg2021/dotfiles/main/install | sh
 ```
 
 ## Signing commits
