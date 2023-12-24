@@ -11,11 +11,17 @@ alias ll='ls -t'
 alias grep='grep --color=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
+alias gln="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s%Creset'"
 
 alias n='ps aux | grep -E "[C]OMMAND|((/.+/)|\s)node(\s|$)"'
 
 function npr() {
     npm run $1 -- $@[2,-1]
+}
+
+function delete-tag() {
+    git tag --delete $1
+    git push origin --delete $1
 }
 
 alias nvm='fnm'
