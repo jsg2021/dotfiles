@@ -12,6 +12,7 @@ ZSH_CUSTOM=~/.dotfiles/zsh/
 plugins=(
   git
   fnm
+  zsh-autosuggestions
 )
 
 source $ZSH/oh-my-zsh.sh
