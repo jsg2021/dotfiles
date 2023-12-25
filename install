@@ -3,6 +3,7 @@
 set -e
 { #prevent exec until fully downloaded?
 
+    CWD=`dirname -- "$( readlink -f -- "$0"; )"`
     DIR=~/.dotfiles
 
     function fetch_files () {
@@ -13,53 +14,60 @@ set -e
 
         if [ ! -d $DIR ]; then
             git clone https://github.com/jsg2021/dotfiles.git $DIR
+            cd $DIR
+            git submodule update --init --recursive
         fi
 
-        cd $DIR
-        git submodule update --init --recursive
     }
 
     function install_tools() {
 
-        curl -fsSL https://fnm.vercel.app/install | bash
+        if ! command -v fnm &> /dev/null; then
+            curl -fsSL https://fnm.vercel.app/install | bash
+        fi
 
         if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces...skipped apps"
             return
         else
-            sh ./scripts/install_1password
-            sh ./scripts/install_github
+            sh $CWD/scripts/install-1password
+            sh $CWD/scripts/install-github
         fi
 
-        sh ./scripts/install_bat
-        sh ./scripts/install_fzf
-        sh ./scripts/install_lsd
+        sh $CWD/scripts/install-bat
+        sh $CWD/scripts/install-fzf
+        sh $CWD/scripts/install-lsd
     }
 
     function install_homebrew() {
-        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        eval "$(/opt/homebrew/bin/brew shellenv)"
+        if ! command -v brew &> /dev/null; then
+            bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
     }
-    
+
+    function install_vim_config() {
+        ln -f -s $DIR/vim/vimrc ~/.vimrc
+        
+        mkdir -p ~/.vim/pack/themes/start
+        mkdir -p ~/.local/share/nvim/site/pack/themes/start
+
+        TARGET=pack/themes/start/vim-code-dark
+        VIM_TARGET=~/.vim/$TARGET
+        NVIM_TARGET=~/.local/share/nvim/site/$TARGET
+
+        ln -f -s $DIR/vim/colors/vim-code-dark $VIM_TARGET
+        ln -f -s $DIR/vim/colors/vim-code-dark $NVIM_TARGET
+    }
+
     function install_configs () {
-        FILES=(gitconfig bash_profile vimrc zshrc)
+        FILES=(gitconfig bash_profile zshrc)
         for f in "${FILES[@]}"
-        do
-            if [ -f ~/.$f ]; then
-                echo "~/.$f exists...remove to use .dotfile version";
-            else
-                rm -f ~/.$f
-                ln -s "$DIR/configs/$f" ~/.$f
-            fi
+        do 
+            ln -f -s "$DIR/configs/$f" ~/.$f
         done
 
-        if [ -f ~/.vim/colors/solarized.vim ]; then
-            echo "~/.vim/colors/solarized.vim exists...remove to use .dotfile version"
-        else
-            mkdir -p ~/.vim/colors
-            ln -s "$DIR/vim-colors-solarized/colors/solarized.vim" ~/.vim/colors/solarized.vim
-        fi
-
+        install_vim_config
 
         zsh -c "zstyle ':omz:update' mode reminder"
         zsh -c "zstyle ':omz:update' frequency 30"

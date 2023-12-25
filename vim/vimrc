@@ -8,5 +8,6 @@ set shiftwidth=4
 
 syntax enable
 set background=dark
-let g:solarized_termcolors=256
-colorscheme solarized
+set t_Co=256
+set t_ut=
+colorscheme codedark
