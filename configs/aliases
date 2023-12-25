@@ -1,13 +1,20 @@
+if command -v lsd &> /dev/null; then
+    alias ls='lsd --header --git'
 #alias listings to color and details
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    alias ls='ls -lFh -G'
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -Fh -G'
 else
-    alias ls='ls -lFh --color=auto'
+    alias ls='ls -Fh --color=auto'
 fi
 
-alias -- -="cd -"
-alias l.='ls -d .*'
-alias ll='ls -t'
+alias l.='ls -l -d .*'
+alias ll='ls -l -t'
+
+alias bathelp='bat --plain --language=help'
+help() {
+    "$@" --help 2>&1 | bathelp
+}
+
 alias grep='grep --color=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"

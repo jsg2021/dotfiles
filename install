@@ -19,37 +19,21 @@ set -e
         git submodule update --init --recursive
     }
 
-    function install_fnm () {
+    function install_tools() {
+
         curl -fsSL https://fnm.vercel.app/install | bash
-    }
 
-    function install_nvm () {
-        NVM_DIR=~/.nvm
-        [ ! -d $NVM_DIR ] && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
-        # Make sure nvm is up-to-date.
-        (
-            cd "$NVM_DIR"
-            git fetch --tags origin
-            git checkout `git describe --abbrev=0 --tags --match "v[0-9]*" $(git rev-list --tags --max-count=1)`
-        ) && \. "$NVM_DIR/nvm.sh"
-    }
-
-    function install_1password() {
         if [ "$CODESPACES" = true ] ; then
-            echo "Running in codespaces...skip install_1password"
+            echo "Running in codespaces...skipped apps"
             return
+        else
+            sh ./scripts/install_1password
+            sh ./scripts/install_github
         fi
 
-        sh ./scripts/install_1password
-    }
-
-    function install_github() {
-        if [ "$CODESPACES" = true ] ; then
-            echo "Running in codespaces...skip install_github"
-            return
-        fi
-
-        sh ./scripts/install_github
+        sh ./scripts/install_bat
+        sh ./scripts/install_fzf
+        sh ./scripts/install_lsd
     }
 
     function install_homebrew() {
@@ -65,7 +49,7 @@ set -e
                 echo "~/.$f exists...remove to use .dotfile version";
             else
                 rm -f ~/.$f
-                ln -s "$DIR/$f" ~/.$f
+                ln -s "$DIR/configs/$f" ~/.$f
             fi
         done
 
@@ -82,15 +66,14 @@ set -e
         # set shell 
         if [[ "$SHELL" != $(which zsh) ]]; then 
             chsh -s $(which zsh)
-            if [[ "$OSTYPE" == "darwin"* ]]; then
-            else
+            if [[ "$OSTYPE" != "darwin"* ]]; then
                 echo "Reboot for SHELL change to take effect."
             fi
         fi
     }
 
     function install_linux () {
-       if [ "$CODESPACES" = true ] ; then
+        if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces...skip install_linux"
             return
         fi
@@ -99,17 +82,19 @@ set -e
             sudo dnf install -y xclip xsel
         elif command -v apt-get &> /dev/null; then
             sudo apt-get install -y xclip xsel
-        else
-            echo "Not using apt/dnf... ";
         fi
 
-        mkdir -p ~/.local/share/applications 
-        ln -s "$DIR/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop
-        ln -s "$DIR/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
-        sudo ln -s ~/.dotfiles/scripts/goto-windows /usr/local/bin/goto-windows
+        sudo ln -s ~/.dotfiles/scripts/goto-windows /usr/local/bin/goto-windows &&
+            mkdir -p ~/.local/share/applications &&
+            ln -s "$DIR/configs/linux/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
+            ln -s "$DIR/configs/linux/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
     }
 
     function install_macos() {
+        if [ "$CODESPACES" = true ] ; then
+            echo "Running in codespaces...skip install_macos"
+            return
+        fi
         install_homebrew
     }
 
@@ -121,8 +106,7 @@ set -e
     else  
         install_linux
     fi
+
     install_configs
-    install_fnm
-    install_1password
-    install_github
+    install_tools
 }

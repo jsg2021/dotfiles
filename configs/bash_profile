@@ -11,7 +11,7 @@ export HISTSIZE=10000
 shopt -s histappend
 
 #Setup prompt
-. ~/.dotfiles/prompt
+. ~/.dotfiles/configs/prompt
 
 #ulimit -n 1024
 ulimit -n 4096
@@ -23,6 +23,6 @@ if [ ! -f ~/.bash_sessions_disable ]; then
 fi
     
 #curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash > ~/.dotfiles/git-completion.bash
-[ -f ~/.dotfiles/git-completion.bash ] && source ~/.dotfiles/git-completion.bash
-source ~/.dotfiles/aliases
-source ~/.dotfiles/vars
+[ -f ~/.dotfiles/configs/git/completion.bash ] && source ~/.dotfiles/configs/git/completion.bash
+source ~/.dotfiles/configs/aliases
+source ~/.dotfiles/configs/vars

@@ -5,7 +5,7 @@
 	version = 2
 
 [core]
-	excludesfile = ~/.dotfiles/gitignore
+	excludesfile = ~/.dotfiles/configs/git/gitignore
 	pager = diff-so-fancy | less --tabs=4 -RFX
 	editor = code --wait
 
@@ -21,7 +21,7 @@
 	signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDbn8X8OGnCZYxq9J8aiK6whgLIq8s1h9v5uEGGuargP
 
 [commit]
-	template = ~/.dotfiles/gitcommit_template
+	template = ~/.dotfiles/configs/git/commit_template
 	gpgsign = true
 
 [gpg]

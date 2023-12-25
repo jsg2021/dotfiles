@@ -1,35 +1,31 @@
-export DENO_INSTALL=~/.dotfiles/deno
-export PATH="$DENO_INSTALL/bin:$PATH"
+export DENO_INSTALL=~/.deno
+PATH=$PATH:$DENO_INSTALL/bin
 if [ ! -d $DENO_INSTALL ]; then
-    if ! grep -q 'deno/' ~/.dotfiles/.gitignore2 &> /dev/null; then
-        echo "deno/" >> ~/.dotfiles/.gitignore
-        curl -fsSL https://deno.land/x/install/install.sh | sh
-    fi
+    curl -fsSL https://deno.land/x/install/install.sh | sh
 fi
 
-BUN_INSTALL=~/.bun
-export PATH="$BUN_INSTALL/bin:$PATH"
+export BUN_INSTALL=~/.bun
+PATH=$PATH:$BUN_INSTALL/bin
 if [ ! -d $BUN_INSTALL ]; then
     curl https://bun.sh/install | bash
 fi
 
-[ -d $HOME/.cargo ] && export PATH="$HOME/.cargo/bin:$PATH"
-[ -d $HOME/bin ] && export PATH="$HOME/bin:$PATH"
-[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+export BAT_CONFIG_PATH=~/.dotfiles/configs/bat/config
 
-#mac
+[ -d $HOME/.cargo ] && PATH=$HOME/.cargo/bin:$PATH
+[ -d $HOME/bin ] && PATH=$HOME/bin:$PATH
+
 [ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH;
-
-
 
 # linux
 [ -d ~/Android/Sdk/ ] && export ANDROID_HOME=~/Android/Sdk/
 # mac
 [ -d ~/Library/Android/Sdk/ ] && export ANDROID_HOME=~/Library/Android/Sdk/
 export ANDROID_SDK_ROOT=$ANDROID_HOME
-export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-export PATH=~/.local/bin:$PATH
-export PATH=~/.dotfiles/scripts:$PATH
+
+PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+PATH=~/.local/bin:$PATH
+PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
 
 mkdir -p ~/.local/bin
@@ -46,3 +42,5 @@ if command -v fnm &> /dev/null; then
     # eval "$(fnm env --use-on-cd)"
     eval "$(fnm env)"
 fi
+
+[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
