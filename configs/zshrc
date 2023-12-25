@@ -13,6 +13,8 @@ plugins=(
   git
   fnm
   zsh-autosuggestions
+  # zsh-syntax-highlighting must be last
+  zsh-syntax-highlighting
 )
 
 source $ZSH/oh-my-zsh.sh
