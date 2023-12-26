@@ -18,15 +18,10 @@ export BAT_CONFIG_PATH=~/.dotfiles/configs/bat/config
 [ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH;
 
 # linux
-[ -d ~/Android/Sdk/ ] && export ANDROID_HOME=~/Android/Sdk/
+[ -d ~/Android/Sdk/ ] && export ANDROID_HOME=~/Android/Sdk
 # mac
-[ -d ~/Library/Android/Sdk/ ] && export ANDROID_HOME=~/Library/Android/Sdk/
+[ -d ~/Library/Android/Sdk/ ] && export ANDROID_HOME=~/Library/Android/Sdk
 export ANDROID_SDK_ROOT=$ANDROID_HOME
-
-PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-PATH=~/.local/bin:$PATH
-PATH=~/.dotfiles/scripts:$PATH
-export PATH=.:$PATH
 
 mkdir -p ~/.local/bin
 
@@ -44,3 +39,8 @@ if command -v fnm &> /dev/null; then
 fi
 
 [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+PATH=~/.local/bin:$PATH
+PATH=~/.dotfiles/scripts:$PATH
+export PATH=.:$PATH

@@ -1,13 +1,10 @@
 export ZSH=~/.dotfiles/oh-my-zsh
-# ZSH_THEME="spaceship"
-source ~/.dotfiles/configs/prompt
+ZSH_CUSTOM=~/.dotfiles/zsh/
 
 DISABLE_UPDATE_PROMPT=true
-
-COMPLETION_WAITING_DOTS="true"
-
+# COMPLETION_WAITING_DOTS="true"
 DISABLE_UNTRACKED_FILES_DIRTY="true"
-ZSH_CUSTOM=~/.dotfiles/zsh/
+
 
 plugins=(
   git
@@ -18,6 +15,9 @@ plugins=(
 )
 
 source $ZSH/oh-my-zsh.sh
+source ~/.dotfiles/configs/prompt
+source ~/.dotfiles/configs/aliases
+source ~/.dotfiles/configs/vars
 
 setopt hist_ignore_all_dups
 setopt hist_expire_dups_first
@@ -28,12 +28,15 @@ setopt hist_no_functions
 setopt hist_reduce_blanks
 
 
-source ~/.dotfiles/configs/aliases
-source ~/.dotfiles/configs/vars
-
-bindkey -e
+bindkey -e # use the Emacs editing mode.
 
 autoload zmv
-autoload -Uz bracketed-paste-magic
+autoload -Uz url-quote-magic bracketed-paste-magic
+zle -N self-insert url-quote-magic
 zle -N bracketed-paste bracketed-paste-magic
 
+typeset -U PATH #deduplicate path elements
+
+function show_path() {
+    echo "$PATH" | tr ':' '\n'
+}
