@@ -6,6 +6,28 @@ set -e
     CWD=`dirname -- "$( readlink -f -- "$0"; )"`
     DIR=~/.dotfiles
 
+    function link_file () {
+        dest=$1 # real file
+        link=$2 # the link file to create
+
+        # if a file exists at $link and is not a symlink...
+        if [ ! -L $link ]; then
+            if [ -f $link ] || [ -d $link ]; then
+                # prompt to overwrite
+                read -p "Overwrite $link? (y/n) " -n 1
+                echo ""
+                if [[ $REPLY =~ ^[Yy]$ ]]; then
+                    rm -rf $link
+                else
+                    echo "Skipping $link"
+                    return
+                fi
+            fi
+        fi
+
+        ln -f -s $dest $link
+    }
+
     function fetch_files () {
         if [ "$CODESPACES" = true ] ; then
             echo "Running in codespaces..."
@@ -47,7 +69,7 @@ set -e
     }
 
     function install_vim_config() {
-        ln -f -s $DIR/vim/vimrc ~/.vimrc
+        link_file $DIR/vim/vimrc ~/.vimrc
         
         mkdir -p ~/.vim/pack/themes/start
         mkdir -p ~/.local/share/nvim/site/pack/themes/start
@@ -56,15 +78,15 @@ set -e
         VIM_TARGET=~/.vim/$TARGET
         NVIM_TARGET=~/.local/share/nvim/site/$TARGET
 
-        ln -f -s $DIR/vim/colors/vim-code-dark $VIM_TARGET
-        ln -f -s $DIR/vim/colors/vim-code-dark $NVIM_TARGET
+        link_file $DIR/vim/colors/vim-code-dark $VIM_TARGET
+        link_file $DIR/vim/colors/vim-code-dark $NVIM_TARGET
     }
 
     function install_configs () {
         FILES=(gitconfig bash_profile zshrc)
         for f in "${FILES[@]}"
         do 
-            ln -f -s "$DIR/configs/$f" ~/.$f
+            link_file "$DIR/configs/$f" ~/.$f
         done
 
         install_vim_config
