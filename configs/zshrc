@@ -36,7 +36,3 @@ zle -N self-insert url-quote-magic
 zle -N bracketed-paste bracketed-paste-magic
 
 typeset -U PATH #deduplicate path elements
-
-function show_path() {
-    echo "$PATH" | tr ':' '\n'
-}

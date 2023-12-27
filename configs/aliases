@@ -46,3 +46,7 @@ fi
 if ! command -v open > /dev/null; then
     alias open='xdg-open'
 fi
+
+function show_path() {
+    echo "$PATH" | tr ':' '\n'
+}
