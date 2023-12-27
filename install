@@ -16,15 +16,19 @@ set -e
                 # prompt to overwrite
                 read -p "Overwrite $link? (y/n) " -n 1
                 echo ""
-                if [[ $REPLY =~ ^[Yy]$ ]]; then
-                    rm -rf $link
-                else
+                # if the response is any character other than 'y'... skip the file
+                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                     echo "Skipping $link"
                     return
                 fi
             fi
         fi
 
+        # if the link exists and points to a directory, we don't want to add new link inside it... which appears to be what happens when 
+        # $link points to a link that points to a directory... that link is not replaced, but the new link is created inside the directory
+        if [ -d $link ]; then
+            rm -rf $link
+        fi
         ln -f -s $dest $link
     }
 
