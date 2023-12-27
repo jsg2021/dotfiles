@@ -1,19 +1,19 @@
 export DENO_INSTALL=~/.deno
-PATH=$PATH:$DENO_INSTALL/bin
+export PATH=$PATH:$DENO_INSTALL/bin
 if [ ! -d $DENO_INSTALL ]; then
     curl -fsSL https://deno.land/x/install/install.sh | sh
 fi
 
 export BUN_INSTALL=~/.bun
-PATH=$PATH:$BUN_INSTALL/bin
+export PATH=$PATH:$BUN_INSTALL/bin
 if [ ! -d $BUN_INSTALL ]; then
     curl https://bun.sh/install | bash
 fi
 
 export BAT_CONFIG_PATH=~/.dotfiles/configs/bat/config
 
-[ -d $HOME/.cargo ] && PATH=$HOME/.cargo/bin:$PATH
-[ -d $HOME/bin ] && PATH=$HOME/bin:$PATH
+[ -d $HOME/.cargo ] && export PATH=$HOME/.cargo/bin:$PATH
+[ -d $HOME/bin ] && export PATH=$HOME/bin:$PATH
 
 [ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH;
 
@@ -33,14 +33,15 @@ if ! command -v op-ssh-sign &> /dev/null; then
     fi
 fi
 
+
+[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
+export PATH=~/.local/bin:$PATH
+export PATH=~/.dotfiles/scripts:$PATH
+export PATH=.:$PATH
+
 if command -v fnm &> /dev/null; then
     # eval "$(fnm env --use-on-cd)"
     eval "$(fnm env)"
 fi
-
-[ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
-
-PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools
-PATH=~/.local/bin:$PATH
-PATH=~/.dotfiles/scripts:$PATH
-export PATH=.:$PATH
