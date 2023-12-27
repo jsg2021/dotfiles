@@ -125,6 +125,9 @@ set -e
             echo "Running in codespaces...skip install_macos"
             return
         fi
+
+        link_file "$DIR/configs/bash_profile" ~/.profile
+
         install_homebrew
     }
 
