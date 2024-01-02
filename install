@@ -3,10 +3,10 @@
 set -e
 { #prevent exec until fully downloaded?
 
-    CWD=`dirname -- "$( readlink -f -- "$0"; )"`
+    CWD=$(dirname -- "$(readlink -f -- "$0")")
     DIR=~/.dotfiles
 
-    function link_file () {
+    function link_file() {
         dest=$1 # real file
         link=$2 # the link file to create
 
@@ -24,7 +24,7 @@ set -e
             fi
         fi
 
-        # if the link exists and points to a directory, we don't want to add new link inside it... which appears to be what happens when 
+        # if the link exists and points to a directory, we don't want to add new link inside it... which appears to be what happens when
         # $link points to a link that points to a directory... that link is not replaced, but the new link is created inside the directory
         if [ -d $link ]; then
             rm -rf $link
@@ -32,8 +32,8 @@ set -e
         ln -f -s $dest $link
     }
 
-    function fetch_files () {
-        if [ "$CODESPACES" = true ] ; then
+    function fetch_files() {
+        if [ "$CODESPACES" = true ]; then
             echo "Running in codespaces..."
             DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
         fi
@@ -48,11 +48,11 @@ set -e
 
     function install_tools() {
 
-        if ! command -v fnm &> /dev/null; then
+        if ! command -v fnm &>/dev/null; then
             curl -fsSL https://fnm.vercel.app/install | bash
         fi
 
-        if [ "$CODESPACES" = true ] ; then
+        if [ "$CODESPACES" = true ]; then
             echo "Running in codespaces...skipped apps"
             return
         else
@@ -60,13 +60,11 @@ set -e
             sh $CWD/scripts/install-github
         fi
 
-        sh $CWD/scripts/install-bat
-        sh $CWD/scripts/install-fzf
-        sh $CWD/scripts/install-lsd
+        install_my_tool bat fzf lsd
     }
 
     function install_homebrew() {
-        if ! command -v brew &> /dev/null; then
+        if ! command -v brew &>/dev/null; then
             bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
             eval "$(/opt/homebrew/bin/brew shellenv)"
         fi
@@ -74,7 +72,7 @@ set -e
 
     function install_vim_config() {
         link_file $DIR/vim/vimrc ~/.vimrc
-        
+
         mkdir -p ~/.vim/pack/themes/start
         mkdir -p ~/.local/share/nvim/site/pack/themes/start
 
@@ -86,10 +84,9 @@ set -e
         link_file $DIR/vim/colors/vim-code-dark $NVIM_TARGET
     }
 
-    function install_configs () {
+    function install_configs() {
         FILES=(gitconfig bash_profile zshrc)
-        for f in "${FILES[@]}"
-        do 
+        for f in "${FILES[@]}"; do
             link_file "$DIR/configs/$f" ~/.$f
         done
 
@@ -97,8 +94,8 @@ set -e
 
         zsh -c "zstyle ':omz:update' mode reminder"
         zsh -c "zstyle ':omz:update' frequency 30"
-        # set shell 
-        if [[ "$SHELL" != $(which zsh) ]]; then 
+        # set shell
+        if [[ "$SHELL" != $(which zsh) ]]; then
             chsh -s $(which zsh)
             if [[ "$OSTYPE" != "darwin"* ]]; then
                 echo "Reboot for SHELL change to take effect."
@@ -106,26 +103,24 @@ set -e
         fi
     }
 
-    function install_linux () {
-        if [ "$CODESPACES" = true ] ; then
+    function install_linux() {
+        if [ "$CODESPACES" = true ]; then
             echo "Running in codespaces...skip install_linux"
             return
         fi
 
-        if command -v dnf &> /dev/null; then 
-            sudo dnf install -y xclip xsel
-        elif command -v apt-get &> /dev/null; then
-            sudo apt-get install -y xclip xsel
-        fi
+        install_my_tool xclip xsel
 
-        sudo ln -s ~/.dotfiles/scripts/goto-windows /usr/local/bin/goto-windows &&
-            mkdir -p ~/.local/share/applications &&
-            ln -s "$DIR/configs/linux/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
-            ln -s "$DIR/configs/linux/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
+        if [ ! -f /usr/local/bin/goto-windows ]; then
+            sudo ln -f -s ~/.dotfiles/scripts/goto-windows &&
+                mkdir -p ~/.local/share/applications &&
+                link_file "$DIR/configs/linux/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
+                link_file "$DIR/configs/linux/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
+        fi>
     }
 
     function install_macos() {
-        if [ "$CODESPACES" = true ] ; then
+        if [ "$CODESPACES" = true ]; then
             echo "Running in codespaces...skip install_macos"
             return
         fi
@@ -134,13 +129,15 @@ set -e
 
         install_homebrew
     }
-
+    #
 
     fetch_files
 
+    source $DIR/scripts/install-function
+
     if [[ "$OSTYPE" == "darwin"* ]]; then
         install_macos
-    else  
+    else
         install_linux
     fi
 

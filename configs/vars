@@ -27,9 +27,9 @@ mkdir -p ~/.local/bin
 
 if ! command -v op-ssh-sign &> /dev/null; then
     if [ -f /Applications/1Password.app/Contents/MacOS/op-ssh-sign ]; then
-        sudo ln -s /Applications/1Password.app/Contents/MacOS/op-ssh-sign ~/.local/bin/op-ssh-sign
+        sudo ln -f -s /Applications/1Password.app/Contents/MacOS/op-ssh-sign ~/.local/bin/op-ssh-sign
     elif [ -f /opt/1Password/op-ssh-sign ]; then
-        sudo ln -s /opt/1Password/op-ssh-sign ~/.local/bin/op-ssh-sign
+        sudo ln -f -s /opt/1Password/op-ssh-sign ~/.local/bin/op-ssh-sign
     fi
 fi
 
