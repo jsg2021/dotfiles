@@ -16,8 +16,8 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 source ~/.dotfiles/configs/prompt
-source ~/.dotfiles/configs/aliases
 source ~/.dotfiles/configs/vars
+source ~/.dotfiles/configs/aliases
 
 setopt hist_ignore_all_dups
 setopt hist_expire_dups_first
