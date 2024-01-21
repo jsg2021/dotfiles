@@ -21,14 +21,18 @@ sudo dnf install \
     remmina \
     -y
 
-# add link to gnome-terminal so "desktopfolder" can open terminals
-sudo ln -s $(which gnome-terminal) /usr/local/bin/x-terminal-emulator
+# add link to terminal so "desktopfolder" can open terminals
+# sudo ln -s $(which gnome-terminal) /usr/local/bin/x-terminal-emulator
+# sudo ln -s $(which konsole) /usr/local/bin/x-terminal-emulator
 
 sudo sh ./install_1password
 # vscode repo
 sudo sh ./install_vscode
 # github cli repo
 sudo sh ./install_github
+
+# albert:
+#https://software.opensuse.org/download.html?project=home:manuelschneid3r&package=albert
 
 #flathub
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
