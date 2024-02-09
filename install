@@ -60,7 +60,7 @@ set -e
             sh $CWD/scripts/install-github
         fi
 
-        install_my_tool bat fzf lsd
+        install_my_tool bat fzf lsd entr ripgrep stow zoxide tmux
     }
 
     function install_homebrew() {
