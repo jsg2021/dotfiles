@@ -9,7 +9,8 @@ DISABLE_UNTRACKED_FILES_DIRTY="true"
 plugins=(
   git
   fnm
-  zsh-autosuggestions
+  fzf
+  zsh-autosuggestion
   # zsh-syntax-highlighting must be last
   zsh-syntax-highlighting
 )
