@@ -10,10 +10,18 @@ fi
 alias l.='ls -l -d .*'
 alias ll='ls -l -t'
 
-alias bathelp='bat --plain --language=help'
-help() {
-    "$@" --help 2>&1 | bathelp
-}
+if command -v bat &> /dev/null; then
+    alias bathelp='bat --plain --language=help'
+    alias cat='bat -b'
+    help() {
+        "$@" --help 2>&1 | bathelp
+    }
+fi
+
+if command -v zoxide &> /dev/null; then
+    eval "$(zoxide init `basename $SHELL`)"
+    alias cd='z'
+fi
 
 alias grep='grep --color=auto'
 
