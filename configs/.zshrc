@@ -15,10 +15,11 @@ plugins=(
   zsh-syntax-highlighting
 )
 
+source ~/.dotfiles/configs/shell/vars
 source $ZSH/oh-my-zsh.sh
-source ~/.dotfiles/configs/prompt
-source ~/.dotfiles/configs/vars
-source ~/.dotfiles/configs/aliases
+
+source ~/.dotfiles/configs/shell/prompt
+source ~/.dotfiles/configs/shell/aliases
 
 setopt hist_ignore_all_dups
 setopt hist_expire_dups_first

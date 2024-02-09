@@ -1,7 +1,21 @@
 #!/bin/bash
 
+# declare -a KNOWN_COMMAND_PACKAGE_ALIAS
+KNOWN_COMMAND_PACKAGE_ALIASES=("ripgrep,rg")
+
 function install_my_tool() {
     for cmd in "$@"; do
+        
+        pkg=$cmd
+        #get alias if it exists
+        for i in "${!KNOWN_COMMAND_PACKAGE_ALIASES[@]}"; do
+            IFS=',' read -ra tuple <<< "${KNOWN_COMMAND_PACKAGE_ALIASES[$i]}"
+            if [[ "${tuple[0]}" = "${cmd}" ]]; then
+                cmd="${tuple[1]}"
+                break
+            fi
+        done
+
         if ! command -v $cmd &>/dev/null; then
             (
                 COMMAND=''
@@ -18,10 +32,10 @@ function install_my_tool() {
                     exit 1
                 fi
 
-                $COMMAND install $cmd
+                $COMMAND install $pkg
             )
         else
-            echo "$cmd already installed"
+            echo "$pkg already installed"
         fi
     done
 }

@@ -10,7 +10,6 @@ if [ ! -d $BUN_INSTALL ]; then
     curl https://bun.sh/install | bash
 fi
 
-export BAT_CONFIG_PATH=~/.dotfiles/configs/bat/config
 
 [ -d $HOME/.cargo ] && export PATH=$HOME/.cargo/bin:$PATH
 [ -d $HOME/bin ] && export PATH=$HOME/bin:$PATH

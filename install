@@ -5,32 +5,7 @@ set -e
 
     CWD=$(dirname -- "$(readlink -f -- "$0")")
     DIR=~/.dotfiles
-
-    function link_file() {
-        dest=$1 # real file
-        link=$2 # the link file to create
-
-        # if a file exists at $link and is not a symlink...
-        if [ ! -L $link ]; then
-            if [ -f $link ] || [ -d $link ]; then
-                # prompt to overwrite
-                read -p "Overwrite $link? (y/n) " -n 1
-                echo ""
-                # if the response is any character other than 'y'... skip the file
-                if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-                    echo "Skipping $link"
-                    return
-                fi
-            fi
-        fi
-
-        # if the link exists and points to a directory, we don't want to add new link inside it... which appears to be what happens when
-        # $link points to a link that points to a directory... that link is not replaced, but the new link is created inside the directory
-        if [ -d $link ]; then
-            rm -rf $link
-        fi
-        ln -f -s $dest $link
-    }
+    HOME=~/
 
     function fetch_files() {
         if [ "$CODESPACES" = true ]; then
@@ -73,25 +48,12 @@ set -e
     function install_vim_config() {
         link_file $DIR/vim/vimrc ~/.vimrc
 
-        mkdir -p ~/.vim/pack/themes/start
-        mkdir -p ~/.local/share/nvim/site/pack/themes/start
-
-        TARGET=pack/themes/start/vim-code-dark
-        VIM_TARGET=~/.vim/$TARGET
-        NVIM_TARGET=~/.local/share/nvim/site/$TARGET
-
-        link_file $DIR/vim/colors/vim-code-dark $VIM_TARGET
-        link_file $DIR/vim/colors/vim-code-dark $NVIM_TARGET
     }
 
     function install_configs() {
-        FILES=(gitconfig bash_profile zshrc)
-        for f in "${FILES[@]}"; do
-            link_file "$DIR/configs/$f" ~/.$f
-        done
-
-        install_vim_config
-
+        stow -t $HOME -d $DIR -S configs
+        # stow -vvv -t $HOME -d $DIR -S configs
+        
         zsh -c "zstyle ':omz:update' mode reminder"
         zsh -c "zstyle ':omz:update' frequency 30"
         # set shell
@@ -116,7 +78,7 @@ set -e
                 mkdir -p ~/.local/share/applications &&
                 link_file "$DIR/configs/linux/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
                 link_file "$DIR/configs/linux/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
-        fi>
+        fi
     }
 
     function install_macos() {
@@ -125,7 +87,7 @@ set -e
             return
         fi
 
-        link_file "$DIR/configs/bash_profile" ~/.profile
+        #link_file "$DIR/configs/bash_profile" ~/.profile
 
         install_homebrew
     }
@@ -141,6 +103,6 @@ set -e
         install_linux
     fi
 
-    install_configs
     install_tools
+    install_configs
 }
