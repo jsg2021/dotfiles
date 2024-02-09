@@ -10,7 +10,7 @@ plugins=(
   git
   fnm
   fzf
-  zsh-autosuggestion
+  zsh-autosuggestions
   # zsh-syntax-highlighting must be last
   zsh-syntax-highlighting
 )
