@@ -75,8 +75,8 @@ set -e
         if [ ! -f /usr/local/bin/goto-windows ]; then
             sudo ln -f -s ~/.dotfiles/scripts/goto-windows &&
                 mkdir -p ~/.local/share/applications &&
-                ln -s "$DIR/scripts/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
-                ln -s "$DIR/scripts/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
+                ln -f -s "$DIR/scripts/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
+                ln -f -s "$DIR/scripts/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
         fi
     }
 
