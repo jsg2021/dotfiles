@@ -1,6 +1,6 @@
 # dotfiles
 
-This sets up my profile & dev environment that I used across all my machines.
+This sets up my profile & dev environment that I use across all my machines.
 
 ## Setup
 
@@ -12,4 +12,4 @@ curl -fsSL https://raw.githubusercontent.com/jsg2021/dotfiles/main/install | sh
 
 ## Signing commits
 
-My commit signing is handled by 1Password. If you use a different signing method, you should update the `gpg` blocks. However, if you also use 1Password, you can use my setup, just set the `signingkey` property in `configs/gitconfig` to your public key.
+My commit signing is handled by 1Password. If you use a different signing method, you should update the `gpg` blocks in the gitconfig. However, if you also use 1Password, you can use my setup, just set the `signingkey` property in `configs/gitconfig` to your public key.
