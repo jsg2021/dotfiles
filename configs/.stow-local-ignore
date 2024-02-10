@@ -1,5 +1,6 @@
+.config/tmux/plugins
 .git
 git
-linux
 shell
-.config/tmux/plugins
+vim
+zsh

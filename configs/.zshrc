@@ -1,5 +1,5 @@
-export ZSH=~/.dotfiles/oh-my-zsh
-ZSH_CUSTOM=~/.dotfiles/zsh/
+export ZSH=~/.dotfiles/configs/zsh/oh-my-zsh
+ZSH_CUSTOM=~/.dotfiles/configs/zsh/
 
 DISABLE_UPDATE_PROMPT=true
 # COMPLETION_WAITING_DOTS="true"

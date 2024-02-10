@@ -49,11 +49,6 @@ set -e
         fi
     }
 
-    function install_vim_config() {
-        link_file $DIR/vim/vimrc ~/.vimrc
-
-    }
-
     function install_configs() {
         stow -t $HOME -d $DIR -S configs
         # stow -vvv -t $HOME -d $DIR -S configs
@@ -80,8 +75,8 @@ set -e
         if [ ! -f /usr/local/bin/goto-windows ]; then
             sudo ln -f -s ~/.dotfiles/scripts/goto-windows &&
                 mkdir -p ~/.local/share/applications &&
-                link_file "$DIR/configs/linux/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
-                link_file "$DIR/configs/linux/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
+                ln -s "$DIR/scripts/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
+                ln -s "$DIR/scripts/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
         fi
     }
 
@@ -90,8 +85,6 @@ set -e
             echo "Running in codespaces...skip install_macos"
             return
         fi
-
-        #link_file "$DIR/configs/bash_profile" ~/.profile
 
         install_homebrew
     }
