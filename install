@@ -36,6 +36,10 @@ set -e
         fi
 
         install_my_tool bat fzf lsd entr ripgrep stow zoxide tmux
+
+        if [ ! -d ~/.tmux/plugins/tpm ]; then
+            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+        fi
     }
 
     function install_homebrew() {
