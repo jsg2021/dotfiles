@@ -1,41 +1,22 @@
 #!/bin/bash
 
-# declare -a KNOWN_COMMAND_PACKAGE_ALIAS
-KNOWN_COMMAND_PACKAGE_ALIASES=("ripgrep,rg", "neovim,nvim")
 
 function install_my_tool() {
-    for cmd in "$@"; do
-        
-        pkg=$cmd
-        #get alias if it exists
-        for i in "${!KNOWN_COMMAND_PACKAGE_ALIASES[@]}"; do
-            IFS=',' read -ra tuple <<< "${KNOWN_COMMAND_PACKAGE_ALIASES[$i]}"
-            if [[ "${tuple[0]}" = "${cmd}" ]]; then
-                cmd="${tuple[1]}"
-                break
-            fi
-        done
-
-        if ! command -v $cmd &>/dev/null; then
-            (
-                COMMAND=''
-                if command -v brew &>/dev/null; then
-                    COMMAND="brew"
-                elif command -v dnf &>/dev/null; then
-                    COMMAND="sudo dnf -y"
-                elif command -v apt-get &>/dev/null; then
-                    COMMAND="sudo apt-get -y"
-                fi
-
-                if [ -z "$COMMAND" ]; then
-                    echo "No package manager found"
-                    exit 1
-                fi
-
-                $COMMAND install $pkg
-            )
-        else
-            echo "$pkg already installed"
+    for pkg in "$@"; do
+        COMMAND=''
+        if command -v brew &>/dev/null; then
+            COMMAND="brew"
+        elif command -v dnf &>/dev/null; then
+            COMMAND="sudo dnf -y"
+        elif command -v apt-get &>/dev/null; then
+            COMMAND="sudo apt-get -y"
         fi
+
+        if [ -z "$COMMAND" ]; then
+            echo "No package manager found"
+            exit 1
+        fi
+
+        $COMMAND install $pkg
     done
 }

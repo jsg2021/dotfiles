@@ -49,7 +49,7 @@ set -e
     }
 
     function install_configs() {
-        stow -vvv -t $HOME -d $DIR -S configs
+        stow -t $HOME -d $DIR -S configs
         # stow -vvv -t $HOME -d $DIR -S configs
         
         zsh -c "zstyle ':omz:update' mode reminder"
