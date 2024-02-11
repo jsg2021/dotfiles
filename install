@@ -34,7 +34,7 @@ set -e
             sh $CWD/scripts/install-github
         fi
 
-        install_my_tool bat fzf lsd entr ripgrep stow zoxide tmux
+        install_my_tool bat fzf lsd entr ripgrep stow zoxide tmux neovim
 
         if [ ! -d ~/.tmux/plugins/tpm ]; then
             git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
@@ -49,7 +49,7 @@ set -e
     }
 
     function install_configs() {
-        stow -t $HOME -d $DIR -S configs
+        stow -vvv -t $HOME -d $DIR -S configs
         # stow -vvv -t $HOME -d $DIR -S configs
         
         zsh -c "zstyle ':omz:update' mode reminder"

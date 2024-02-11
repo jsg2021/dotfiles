@@ -10,6 +10,4 @@
 [submodule "configs/zsh/plugins/zsh-syntax-highlighting"]
 	path = configs/zsh/plugins/zsh-syntax-highlighting
 	url = https://github.com/zsh-users/zsh-syntax-highlighting.git
-[submodule "configs/vim/colors/vim-code-dark"]
-	path = configs/vim/colors/vim-code-dark
-	url = https://github.com/tomasiser/vim-code-dark.git
+

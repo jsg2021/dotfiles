@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # declare -a KNOWN_COMMAND_PACKAGE_ALIAS
-KNOWN_COMMAND_PACKAGE_ALIASES=("ripgrep,rg")
+KNOWN_COMMAND_PACKAGE_ALIASES=("ripgrep,rg", "neovim,nvim")
 
 function install_my_tool() {
     for cmd in "$@"; do

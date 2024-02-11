@@ -10,4 +10,4 @@ syntax enable
 set background=dark
 set t_Co=256
 set t_ut=
-colorscheme codedark
+@REM colorscheme codedark
