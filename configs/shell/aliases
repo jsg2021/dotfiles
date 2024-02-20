@@ -26,7 +26,7 @@ fi
 alias grep='grep --color=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
-alias gln="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s%Creset'"
+alias gln="git log --graph --oneline --pretty='%s'"
 
 alias n='ps aux | grep -E "[C]OMMAND|((/.+/)|\s)node(\s|$)"'
 
