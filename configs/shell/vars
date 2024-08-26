@@ -15,7 +15,7 @@ export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 [ -d $HOME/.cargo ] && export PATH=$HOME/.cargo/bin:$PATH
 [ -d $HOME/bin ] && export PATH=$HOME/bin:$PATH
 
-[ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH;
+[ -d ~/Library/Python/3.8/bin ] && export PATH=~/Library/Python/3.8/bin:$PATH
 
 # linux
 [ -d ~/Android/Sdk/ ] && export ANDROID_HOME=~/Android/Sdk
@@ -25,14 +25,13 @@ export ANDROID_SDK_ROOT=$ANDROID_HOME
 
 mkdir -p ~/.local/bin
 
-if ! command -v op-ssh-sign &> /dev/null; then
+if ! command -v op-ssh-sign &>/dev/null; then
     if [ -f /Applications/1Password.app/Contents/MacOS/op-ssh-sign ]; then
         sudo ln -f -s /Applications/1Password.app/Contents/MacOS/op-ssh-sign ~/.local/bin/op-ssh-sign
     elif [ -f /opt/1Password/op-ssh-sign ]; then
         sudo ln -f -s /opt/1Password/op-ssh-sign ~/.local/bin/op-ssh-sign
     fi
 fi
-
 
 [ -f /opt/homebrew/bin/brew ] && eval "$(/opt/homebrew/bin/brew shellenv)"
 
@@ -41,7 +40,9 @@ export PATH=~/.local/bin:$PATH
 export PATH=~/.dotfiles/scripts:$PATH
 export PATH=.:$PATH
 
-if command -v fnm &> /dev/null; then
+if command -v fnm &>/dev/null; then
     # eval "$(fnm env --use-on-cd)"
     eval "$(fnm env)"
 fi
+
+[ -f ~/.secrets ] && source ~/.secrets
