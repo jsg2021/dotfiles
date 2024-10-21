@@ -23,6 +23,10 @@ if command -v zoxide &> /dev/null; then
     alias cd='z'
 fi
 
+if command -v fzf &> /dev/null; then
+    eval "$(fzf --`basename $SHELL`)"
+fi
+
 alias grep='grep --color=auto'
 
 alias gl="git log --graph --oneline --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
