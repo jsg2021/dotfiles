@@ -7,19 +7,20 @@ CWD=`dirname -- "$( readlink -f -- "$0"; )"`
 
     # AppImageLauncher service
     if ! command -v AppImageLauncher &> /dev/null; then
-        ASSETS=$(curl -fsSL https://github.com/TheAssassin/AppImageLauncher/releases/latest | pup -n '[src*=expanded_assets] attr{src}')
+        
+        API="https://api.github.com/repos/TheAssassin/AppImageLauncher/releases/latest"
+
         if command -v dnf &> /dev/null; then 
-            PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=x86_64.rpm] attr{href}')
+            PATH=$(curl -Ls -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API | jq -r '.assets[] | select(.name | contains("x86_64.rpm")) | .browser_download_url')
             sudo dnf install https://github.com$PATH;
+            return;
         if
 
         if command -v apt &> /dev/null; then
-            # not updated beyond ubuntu 18.04??
-            # PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=bionic_amd64.rpm] attr{href}')
-            # sudo apt install https://github.com$PATH;
-
-            PATH=$(curl -fsSL $ASSETS | pup 'a[rel=nofollow][href$=x86_64.AppImage] attr{href}')
-            curl -fsSL -o ~/Downloads/appimagelauncher-lite.AppImage $PATH
+            curl -Ls -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API | jq -r '.assets[] | select(.name | contains("x86_64.AppImage")) | .browser_download_url' | xargs curl -fsSL -o ~/Downloads/appimagelauncher-lite.AppImage
+            return;
         fi
+
+        echo "AppImageLauncher not installed, platform not handled"
     fi
 }

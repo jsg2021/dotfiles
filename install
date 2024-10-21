@@ -52,8 +52,6 @@ set -e
         stow -t $HOME -d $DIR -S configs
         # stow -vvv -t $HOME -d $DIR -S configs
         
-        zsh -c "zstyle ':omz:update' mode reminder"
-        zsh -c "zstyle ':omz:update' frequency 30"
         # set shell
         if [[ "$SHELL" != $(which zsh) ]]; then
             chsh -s $(which zsh)

@@ -45,4 +45,6 @@ if command -v fnm &>/dev/null; then
     eval "$(fnm env)"
 fi
 
+install-diff-so-fancy
+
 [ -f ~/.secrets ] && source ~/.secrets
