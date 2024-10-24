@@ -1,0 +1,113 @@
+version = 2
+auto_upgrade = true
+final_space = true
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+
+# https://ohmyposh.dev/docs
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  # [[blocks.segments]]
+  #   foreground = 'lightYellow'
+  #   style = 'plain'
+  #   template = '{{ .UserName }} '
+  #   type = 'session'
+
+  [[blocks.segments]]
+    type = 'path'
+    style = 'plain'
+    background = 'transparent'
+    foreground = 'cyan'
+    template = '{{ .Path }}'
+
+    [blocks.segments.properties]
+      # https://ohmyposh.dev/docs/segments/system/path#style
+      # style = 'folder'
+      # style = 'full'
+      style = 'unique'
+
+  [[blocks.segments]]
+     type = "git"
+     background = 'transparent'
+     foreground = "#ff94df"
+     style = "plain"
+     template = '{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+
+      [blocks.segments.properties]
+        commit_icon = '@ '
+        branch_icon = " <#ff94df><b>\ue0a0 </b></>"
+        fetch_stash_count = true
+        fetch_status = true
+        fetch_upstream_icon = true
+        # source = "cli"
+        mapped_branches = { "feat/*" = "🚀 ", "bug/*" = "🐛 ", "fix/*" = "🐛 " }
+
+
+[[blocks]]
+  type = 'rprompt'
+  overflow = 'hidden'
+
+  # [[blocks.segments]]
+  #   type = 'deno'
+  #   style = 'plain'
+  #   foreground = "#3C82F6"
+  #   template = "  {{ .Full }} "
+  
+  [[blocks.segments]]
+    type = 'node'
+    style = 'plain'
+    foreground = '#6CA35E'
+    background = 'transparent'
+    template = "  {{ .Full }} "
+
+  [[blocks.segments]]
+    type = 'npm'
+    style = "plain"
+    foreground = '#ffeb3b'
+    background = 'transparent'
+    template = " {{ .Full }} "
+
+  [[blocks.segments]]
+    type = 'upgrade'
+    style = 'plain'
+    foreground = '#111111'
+    background = '#FFD664'
+
+  [[blocks.segments]]
+    type = 'executiontime'
+    style = 'plain'
+    foreground = 'yellow'
+    background = 'transparent'
+    template = '{{ .FormattedMs }}'
+
+    [blocks.segments.properties]
+      threshold = 5000
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+  newline = true
+
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground_templates = [
+      "{{if gt .Code 0}}red{{end}}",
+      "{{if eq .Code 0}}lightGreen{{end}}",
+    ]
+    background = 'transparent'
+    template = ' ❯'
+
+[transient_prompt]
+  foreground_templates = [
+    "{{if gt .Code 0}}red{{end}}",
+    "{{if eq .Code 0}}lightGreen{{end}}",
+  ]
+  background = 'transparent'
+  template = ' ❯ '
+
+[secondary_prompt]
+  foreground = 'lightGreen'
+  background = 'transparent'
+  template = '❯❯ '

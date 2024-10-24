@@ -1,10 +1,15 @@
-if ! command -v starship &>/dev/null; then
-  sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+# if ! command -v starship &>/dev/null; then
+#   sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+# fi
+
+# eval "$(starship init `basename $SHELL`)"
+
+
+if ! command -v oh-my-posh &>/dev/null; then
+  sh -c "$(curl -fsSL https://ohmyposh.dev/install.sh)"
 fi
 
-if [[ "$BASH_VERSION" != "" ]]; then
-  eval "$(starship init bash)"
-fi
-if [[ "$ZSH_VERSION" != "" ]]; then
-  eval "$(starship init zsh)"
-fi
+eval "$(oh-my-posh init `basename $SHELL` --config ~/.config/oh-my-posh.toml)"
+
+
+

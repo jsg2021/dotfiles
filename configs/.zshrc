@@ -10,6 +10,11 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+source ~/.dotfiles/configs/shell/vars
+source ~/.dotfiles/configs/shell/aliases
+
+source ~/.dotfiles/configs/shell/prompt
+
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
@@ -33,9 +38,6 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
-source ~/.dotfiles/configs/shell/vars
-source ~/.dotfiles/configs/shell/prompt
-source ~/.dotfiles/configs/shell/aliases
 
 
 # Keybindings
