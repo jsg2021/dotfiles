@@ -16,7 +16,7 @@ set -e
         if [ ! -d $DIR ]; then
             git clone https://github.com/jsg2021/dotfiles.git $DIR
             cd $DIR
-            git submodule update --init --recursive
+            # git submodule update --init --recursive
         fi
 
     }
