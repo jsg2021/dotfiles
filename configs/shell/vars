@@ -1,3 +1,5 @@
+export shell=${shell:-`basename $SHELL`}
+
 export DENO_INSTALL=~/.deno
 export PATH=$PATH:$DENO_INSTALL/bin
 if [ ! -d $DENO_INSTALL ]; then

@@ -1,15 +1,18 @@
-# if ! command -v starship &>/dev/null; then
-#   sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-# fi
+#oh-my-posh seems to be broken on bash?
+if [ "$shell" = "bash" ]; then
+  
+if ! command -v starship &>/dev/null; then
+  sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+fi
 
-# eval "$(starship init `basename $SHELL`)"
+eval "$(starship init $shell)"
 
+else
 
 if ! command -v oh-my-posh &>/dev/null; then
   sh -c "$(curl -fsSL https://ohmyposh.dev/install.sh)"
 fi
 
-eval "$(oh-my-posh init `basename $SHELL` --config ~/.config/oh-my-posh.toml)"
+eval "$(oh-my-posh init $shell --config ~/.config/oh-my-posh.toml)"
 
-
-
+fi

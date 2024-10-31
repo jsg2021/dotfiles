@@ -19,12 +19,12 @@ if command -v bat &> /dev/null; then
 fi
 
 if command -v zoxide &> /dev/null; then
-    eval "$(zoxide init `basename $SHELL`)"
+    eval "$(zoxide init $shell)"
     alias cd='z'
 fi
 
 if command -v fzf &> /dev/null; then
-    eval "$(fzf --`basename $SHELL`)"
+    eval "$(fzf --$shell)"
 fi
 
 alias grep='grep --color=auto'
