@@ -1,85 +1,82 @@
-version = 2
+console_title_template = '{{ .Shell }} in {{ .Folder }}'
+version = 3
 auto_upgrade = true
 final_space = true
-console_title_template = '{{ .Shell }} in {{ .Folder }}'
 
-# https://ohmyposh.dev/docs
+[secondary_prompt]
+  template = '❯❯ '
+  foreground = 'lightGreen'
+  background = 'transparent'
+
+[transient_prompt]
+  template = ' ❯ '
+  foreground = ''
+  background = 'transparent'
+  foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}lightGreen{{end}}']
+
 [[blocks]]
   type = 'prompt'
   alignment = 'left'
 
-  # [[blocks.segments]]
-  #   foreground = 'lightYellow'
-  #   style = 'plain'
-  #   template = '{{ .UserName }} '
-  #   type = 'session'
-
   [[blocks.segments]]
-    type = 'path'
     style = 'plain'
-    background = 'transparent'
-    foreground = 'cyan'
     template = '{{ .Path }}'
+    foreground = 'cyan'
+    background = 'transparent'
+    type = 'path'
 
     [blocks.segments.properties]
-      # https://ohmyposh.dev/docs/segments/system/path#style
-      # style = 'folder'
-      # style = 'full'
       style = 'unique'
 
   [[blocks.segments]]
-     type = "git"
-     background = 'transparent'
-     foreground = "#ff94df"
-     style = "plain"
-     template = ' <#fff>on</>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+    style = 'plain'
+    template = ' <#fff>on</>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
+    foreground = '#ff94df'
+    background = 'transparent'
+    type = 'git'
 
-      [blocks.segments.properties]
-        commit_icon = '@ '
-        branch_icon = " <#ff94df><b>\ue0a0 </b></>"
-        fetch_stash_count = true
-        fetch_status = true
-        fetch_upstream_icon = true
-        # source = "cli"
-        mapped_branches = { "feat/*" = "🚀 ", "bug/*" = "🐛 ", "fix/*" = "🐛 " }
+    [blocks.segments.properties]
+      branch_icon = ' <#ff94df><b> </b></>'
+      commit_icon = '@ '
+      fetch_stash_count = true
+      fetch_status = true
+      fetch_upstream_icon = true
 
+      [blocks.segments.properties.mapped_branches]
+        'bug/*' = '🐛 '
+        'feat/*' = '🚀 '
+        'fix/*' = '🐛 '
 
 [[blocks]]
   type = 'rprompt'
   overflow = 'hidden'
 
-  # [[blocks.segments]]
-  #   type = 'deno'
-  #   style = 'plain'
-  #   foreground = "#3C82F6"
-  #   template = "  {{ .Full }} "
-  
   [[blocks.segments]]
-    type = 'node'
     style = 'plain'
+    template = '  {{ .Full }} '
     foreground = '#6CA35E'
     background = 'transparent'
-    template = "  {{ .Full }} "
+    type = 'node'
 
   [[blocks.segments]]
-    type = 'npm'
-    style = "plain"
+    style = 'plain'
+    template = ' {{ .Full }} '
     foreground = '#ffeb3b'
     background = 'transparent'
-    template = " {{ .Full }} "
+    type = 'npm'
 
   [[blocks.segments]]
-    type = 'upgrade'
     style = 'plain'
     foreground = '#111111'
     background = '#FFD664'
+    type = 'upgrade'
 
   [[blocks.segments]]
-    type = 'executiontime'
     style = 'plain'
+    template = '{{ .FormattedMs }}'
     foreground = 'yellow'
     background = 'transparent'
-    template = '{{ .FormattedMs }}'
+    type = 'executiontime'
 
     [blocks.segments.properties]
       threshold = 5000
@@ -90,24 +87,9 @@ console_title_template = '{{ .Shell }} in {{ .Folder }}'
   newline = true
 
   [[blocks.segments]]
-    type = 'text'
     style = 'plain'
-    foreground_templates = [
-      "{{if gt .Code 0}}red{{end}}",
-      "{{if eq .Code 0}}lightGreen{{end}}",
-    ]
-    background = 'transparent'
     template = ' ❯'
-
-[transient_prompt]
-  foreground_templates = [
-    "{{if gt .Code 0}}red{{end}}",
-    "{{if eq .Code 0}}lightGreen{{end}}",
-  ]
-  background = 'transparent'
-  template = ' ❯ '
-
-[secondary_prompt]
-  foreground = 'lightGreen'
-  background = 'transparent'
-  template = '❯❯ '
+    foreground = ''
+    background = 'transparent'
+    type = 'text'
+    foreground_templates = ['{{if gt .Code 0}}red{{end}}', '{{if eq .Code 0}}lightGreen{{end}}']
