@@ -49,4 +49,5 @@ fi
 
 install-diff-so-fancy
 
+[ -f ~/.profile.local ] && source ~/.profile.local
 [ -f ~/.secrets ] && source ~/.secrets
