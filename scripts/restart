@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -e;
+BOOT_ITEM=$(efibootmgr | grep "BootCurrent")
+
+BOOT_ITEM=($BOOT_ITEM);
+BOOT_ITEM=${BOOT_ITEM[1]};
+
+sudo efibootmgr -n $BOOT_ITEM &> /dev/null;
+systemctl reboot
