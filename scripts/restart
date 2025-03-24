@@ -1,5 +1,21 @@
 #!/usr/bin/env bash
 set -e;
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "This script is not for macOS";
+    exit 1;
+fi
+
+if ! command -v systemctl &>/dev/null; then
+    echo "systemctl not found";
+    exit 1;
+fi
+
+if ! command -v efibootmgr &>/dev/null; then
+    echo "efibootmgr not found";
+    exit 1;
+fi
+
 BOOT_ITEM=$(efibootmgr | grep "BootCurrent")
 
 BOOT_ITEM=($BOOT_ITEM);
