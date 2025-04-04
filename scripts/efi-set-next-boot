@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -e;
+
+# Notes:
+#   I use EFI as my boot manager. My primary OS (windows) is default and without intervention. 
+# If I want to boot into my secondary OS (linux), I will press F8 to select the boot device. 
+# While working in the a secondary OS, if I need to reboot, it is nice to be able to just 
+# reboot and have it boot into the secondary OS without having to press F8 again. Thats where
+# this script comes in.
+#
+# Run this to make sure the system boots into the same OS next time:
+# sudo cp ~/.dotfiles/scripts/efi-hack.service /etc/systemd/system/efi-hack.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable efi-hack.service
+
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "This script is not for macOS";
+    exit 1;
+fi
+
+if ! command -v systemctl &>/dev/null; then
+    echo "systemctl not found";
+    exit 1;
+fi
+
+if ! command -v efibootmgr &>/dev/null; then
+    echo "efibootmgr not found";
+    exit 1;
+fi
+
+BOOT_ITEM=$(efibootmgr | grep "BootCurrent")
+
+BOOT_ITEM=($BOOT_ITEM);
+BOOT_ITEM=${BOOT_ITEM[1]};
+
+efibootmgr -n $BOOT_ITEM &> /dev/null;

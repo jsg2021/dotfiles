@@ -1,0 +1,11 @@
+[Unit]
+Description=Keep the EFI next-boot entry set to the current boot entry
+After=multi-user.target
+
+[Service]
+ExecStart=/usr/bin/bash /home/jonathan/.dotfiles/scripts/efi-set-next-boot
+Type=simple
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
