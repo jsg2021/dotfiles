@@ -34,7 +34,7 @@ set -e
             sh $CWD/scripts/install-github
         fi
 
-        install_my_tool bat fzf lsd entr ripgrep stow zoxide tmux neovim
+        install_my_tool bat fzf fd-find lsd entr ripgrep stow zoxide tmux neovim
 
         if [ ! -d ~/.tmux/plugins/tpm ]; then
             git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
