@@ -3,14 +3,20 @@ export shell=${shell:-`basename $SHELL`}
 export DENO_INSTALL=~/.deno
 export PATH=$PATH:$DENO_INSTALL/bin
 if [ ! -d $DENO_INSTALL ]; then
-    curl -fsSL https://deno.land/x/install/install.sh | sh
+    curl -LsSLf https://deno.land/x/install/install.sh | sh
 fi
 
 export BUN_INSTALL=~/.bun
 export PATH=$PATH:$BUN_INSTALL/bin
 if [ ! -d $BUN_INSTALL ]; then
-    curl https://bun.sh/install | bash
+    curl -LsSLf https://bun.sh/install | bash
 fi
+
+# bun completions
+if [ -s $BUN_INSTALL/_bun ]; then
+    fpath=($BUN_INSTALL $fpath)
+fi
+
 
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 
