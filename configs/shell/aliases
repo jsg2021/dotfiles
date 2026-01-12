@@ -23,7 +23,21 @@ if command -v zoxide &> /dev/null; then
     alias cd='z'
 fi
 
-if command -v fzf &> /dev/null; then
+[ -d $HOME/.local/share/zsh/site-functions/ ] || mkdir -p $HOME/.local/share/zsh/site-functions/
+fpath=($HOME/.local/share/zsh/site-functions/ $fpath)
+
+# use atuin for shell history if available, otherwise fallback to fzf
+if [ -f "$HOME/.atuin/bin/env" ]; then
+    if [ $shell = "bash" ]; then
+        [ ! -f $HOME/.atuin/bash-preexec.sh ] && curl -LsSLf https://raw.githubusercontent.com/rcaloras/bash-preexec/master/bash-preexec.sh -o $HOME/.atuin/bash-preexec.sh
+        source $HOME/.atuin/bash-preexec.sh
+    fi
+    source "$HOME/.atuin/bin/env"
+    if [ ! -f "$HOME/.local/share/zsh/site-functions/_atuin" ]; then
+        atuin gen-completions --shell zsh --out-dir "$HOME/.local/share/zsh/site-functions/"
+    fi
+    eval "$(atuin init $shell --disable-up-arrow)"
+elif command -v fzf &> /dev/null; then
     eval "$(fzf --$shell)"
 fi
 

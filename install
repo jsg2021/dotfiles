@@ -1,5 +1,10 @@
 #!/bin/bash
 # set -x
+
+# REMINDER: if you want to reestablish links to configs on an already installed
+# environment, run:
+#     stow -t ~/ -d ~/.dotfiles -S configs --adopt
+
 set -e
 { #prevent exec until fully downloaded?
 
@@ -24,9 +29,13 @@ set -e
     function install_tools() {
 
         if ! command -v fnm &>/dev/null; then
-            curl -fsSL https://fnm.vercel.app/install | bash
+            curl -fsSLf https://fnm.vercel.app/install | bash
         fi
 
+        if ! command -v atuin &>/dev/null then
+            curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
+        fi
+        
         if [ "$CODESPACES" = true ]; then
             echo "Running in codespaces...skipping desktop apps"
         else
