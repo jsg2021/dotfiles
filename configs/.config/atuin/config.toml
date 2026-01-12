@@ -77,7 +77,7 @@
 # inline_height_shell_up_key_binding = 0
 
 ## Invert the UI - put the search bar at the top , Default to `false`
-# invert = false
+invert = true
 
 ## enable or disable showing a preview of the selected command
 ## useful when the command is longer than the terminal width and is cut off
@@ -112,20 +112,9 @@
 ## with ^ or end with $, they'll match anywhere in the command.
 ## For details on the supported regular expression syntax, see
 ## https://docs.rs/regex/latest/regex/#syntax
-history_filter = [
-  "^cd",
-  "^ls",
-  "^ll",
-  "^pwd",
-  "^exit",
-  "^logout",
-  "^clear",
-  "^history",
-  "^atuin",
-  "^\\(",
-  "^bash",
-  "^secret-cmd",
-]
+# history_filter = [
+#   "^secret-cmd",
+# ]
 
 ## prevent commands run with cwd matching any of these regexes from being written
 ## to history. Note that these regular expressions are unanchored, i.e. if they don't
