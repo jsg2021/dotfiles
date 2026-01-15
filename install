@@ -3,7 +3,7 @@
 
 # REMINDER: if you want to reestablish links to configs on an already installed
 # environment, run:
-#     stow -t ~/ -d ~/.dotfiles -S configs --adopt
+#     stow configs --adopt [--simulate -vvv]
 
 set -e
 { #prevent exec until fully downloaded?
@@ -58,8 +58,8 @@ set -e
     }
 
     function install_configs() {
-        stow -t $HOME -d $DIR -S configs
-        # stow -vvv -t $HOME -d $DIR -S configs
+        stow configs
+        # stow -vvv configs
         
         # set shell
         if [[ "$SHELL" != $(which zsh) ]]; then
