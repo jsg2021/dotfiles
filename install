@@ -28,26 +28,28 @@ set -e
 
     function install_tools() {
 
-        if ! command -v fnm &>/dev/null; then
-            curl -fsSLf https://fnm.vercel.app/install | bash
-        fi
-
-        if ! command -v atuin &>/dev/null then
-            curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
-        fi
-        
         if [ "$CODESPACES" = true ]; then
-            echo "Running in codespaces...skipping desktop apps"
+            echo "Running in codespaces...skipping unnecessary tool installs"
         else
             sh $CWD/scripts/install-1password
             sh $CWD/scripts/install-github
         fi
 
+        if ! command -v fnm &>/dev/null; then
+            curl -fsSLf https://fnm.vercel.app/install | bash
+        fi
+
+        if ! command -v atuin &>/dev/null; then
+            curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
+        fi
+   
         install_my_tool bat fzf fd-find lsd entr ripgrep stow zoxide tmux neovim
 
         if [ ! -d ~/.tmux/plugins/tpm ]; then
             git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
         fi
+
+        ./configs/.configs/ghostty/setup.sh
     }
 
     function install_homebrew() {
