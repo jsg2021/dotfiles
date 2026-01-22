@@ -2,4 +2,7 @@ window-width = 150
 window-height = 30
 
 mouse-hide-while-typing = true
-config-file = platform-override
+window-decoration = none
+config-file = ?platform-override
+
+keybind = global:ctrl+shift+`=toggle_quick_terminal

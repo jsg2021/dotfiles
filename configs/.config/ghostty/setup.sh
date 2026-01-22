@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
-PLATFORM=linux
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  PLATFORM=macos
+PLATFORM=macos
+if [[ "$OSTYPE" != "darwin"* ]]; then
+  exit 0;
 fi
 
 CWD=$(dirname -- "$(readlink -f -- "$0")")
