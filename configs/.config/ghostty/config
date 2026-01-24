@@ -3,6 +3,6 @@ window-height = 30
 
 mouse-hide-while-typing = true
 window-decoration = none
-config-file = ?platform-override
+# keybind = global:ctrl+shift+`=toggle_quick_terminal
 
-keybind = global:ctrl+shift+`=toggle_quick_terminal
+config-file = ?platform-override
