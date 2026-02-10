@@ -64,7 +64,6 @@ if ! $NO_INSTALL; then
             fi
         fi
     done
-    REGENERATE_LOCKFILE= [ "$1" == "--regenerate-lockfile" ] || [ "$1" == "-r" ]
 
     if [ -z "$PCK_MGR" ]; then
         echo "No supported package manager found. Please install npm, yarn, pnpm, or bun."
