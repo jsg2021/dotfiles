@@ -114,7 +114,9 @@ invert = true
 ## https://docs.rs/regex/latest/regex/#syntax
 history_filter = [
   "^secret-cmd",
-  "^ELECTRON_RUN_AS_NODE=1"
+  "^ELECTRON_RUN_AS_NODE=1",
+  # user:pass@server
+  "[a-z0-9_+.-]+:[^@\\s]+@[a-z0-9_.-]+"
 ]
 
 ## prevent commands run with cwd matching any of these regexes from being written
