@@ -1,11 +1,5 @@
 export shell=${shell:-`basename $SHELL`}
 
-export DENO_INSTALL=~/.deno
-export PATH=$PATH:$DENO_INSTALL/bin
-if [ ! -d $DENO_INSTALL ]; then
-    curl -LsSLf https://deno.land/x/install/install.sh | sh
-fi
-
 export BUN_INSTALL=~/.bun
 export PATH=$PATH:$BUN_INSTALL/bin
 if [ ! -d $BUN_INSTALL ]; then

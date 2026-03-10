@@ -60,8 +60,20 @@ set -e
     }
 
     function install_configs() {
-        stow configs
-        # stow -vvv configs
+        IS_GIT_CLEAN=$(git -C $DIR status --porcelain)
+        if [ -n "$IS_GIT_CLEAN" ]; then
+            echo "Git repository is not clean. Please commit or stash changes before installing configs."
+            exit 1
+        fi
+
+        stow configs --adopt # adopt to prevent stow from complaining about existing files, since we are going to reset hard anyway
+        # verbose:
+        # stow configs --adopt -vvv configs
+        IS_GIT_CLEAN=$(git -C $DIR status --porcelain)
+        if [ -n "$IS_GIT_CLEAN" ]; then
+            echo "Stashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.";
+            git stash --include-untracked
+        fi
         
         # set shell
         if [[ "$SHELL" != $(which zsh) ]]; then
