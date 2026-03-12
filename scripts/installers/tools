@@ -1,0 +1,33 @@
+#!/bin/bash
+# set -x
+set -e
+
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source $DIR/helpers
+
+if [ "$CODESPACES" = true ]; then
+    echo "Running in codespaces...skipping unnecessary tool installs"
+else
+    sh $DIR/1password
+    sh $DIR/github
+    sh $DIR/vscode
+fi
+
+install_my_tool bat fzf fd lsd entr ripgrep stow zoxide tmux neovim
+
+sh $DIR/../../configs/.config/ghostty/setup.sh
+sh $DIR/diffnav
+sh $DIR/diff-so-fancy
+
+if ! command -v fnm &>/dev/null; then
+    curl -fsSLf https://fnm.vercel.app/install | bash
+fi
+
+if ! command -v atuin &>/dev/null; then
+    curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
+fi
+
+if [ ! -d ~/.tmux/plugins/tpm ]; then
+    git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+

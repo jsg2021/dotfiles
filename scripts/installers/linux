@@ -1,0 +1,10 @@
+#!/bin/bash
+# set -x
+set -e
+
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source $DIR/helpers
+
+install_my_tool xclip xsel
+
+sh $DIR/tools

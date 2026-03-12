@@ -1,0 +1,47 @@
+#!/bin/bash
+# set -x
+set -e
+
+get_distro_id() {
+    if [[ -f /etc/os-release ]]; then
+        # Use awk to safely extract the ID without sourcing in a function
+        awk -F= '/^ID=/{print tolower($2)}' /etc/os-release
+    else
+        # Fallback for non-Linux systems or very old distributions
+        uname
+    fi
+}
+
+case $(get_distro_id) in
+    fedora)
+        if [ ! command -v docker &> /dev/null ]; then
+            # https://docs.docker.com/engine/install/fedora/
+            # remove conflicting packages
+            sudo dnf remove docker \
+                        docker-client \
+                        docker-client-latest \
+                        docker-common \
+                        docker-latest \
+                        docker-latest-logrotate \
+                        docker-logrotate \
+                        docker-selinux \
+                        docker-engine-selinux \
+                        docker-engine;
+
+            # set up the repository
+            sudo dnf config-manager addrepo --from-repofile https://download.docker.com/linux/fedora/docker-ce.repo
+            # install docker
+            sudo dnf install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+            sudo systemctl enable --now docker
+        fi
+        ;;
+    darwin)
+        open https://desktop.docker.com/mac/main/arm64/Docker.dmg
+        exit 0;
+        ;;
+    *)
+        echo "Unknown or unsupported distribution."
+        exit 1
+        ;;
+esac
+

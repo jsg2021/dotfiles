@@ -1,0 +1,11 @@
+#!/bin/bash
+# set -x
+set -e
+
+# set shell
+if [[ "$SHELL" != $(which zsh) ]]; then
+    chsh -s $(which zsh)
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+        echo "Reboot for SHELL change to take effect."
+    fi
+fi

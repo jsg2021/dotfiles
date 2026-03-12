@@ -47,7 +47,8 @@ if command -v fnm &>/dev/null; then
     eval "$(fnm env)"
 fi
 
-install-diff-so-fancy
-
 [ -f ~/.profile.local ] && source ~/.profile.local
 [ -f ~/.secrets ] && source ~/.secrets
+
+export VISUAL="code --wait"
+export EDITOR="$VISUAL"

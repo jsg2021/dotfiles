@@ -1,0 +1,78 @@
+#!/bin/bash
+set -e
+# set -x
+
+DNF_PKG_ALIASES=(
+    "fd fd-find"
+)
+
+PACKAGE_COMMAND_ALIASES=(
+    "ripgrep rg"
+    "neovim nvim"
+)
+
+function map_get() {
+    local key="$1"
+    shift
+    local -a map=("$@")
+    
+    for entry in "${map[@]}"; do
+        IFS=' ' read -r map_key map_value <<< "$entry"
+        if [ "$key" = "$map_key" ]; then
+            echo "$map_value"
+            return 0
+        fi
+    done
+    
+    echo "$key"
+    return 0
+}
+
+function install_my_tool() {
+    for pkg in "$@"; do
+
+        cmd=$(map_get "$pkg" "${PACKAGE_COMMAND_ALIASES[@]}")
+
+        if command -v $cmd &>/dev/null; then
+            echo "$pkg is already installed at $cmd, skipping..."
+            continue
+        else
+            echo "Installing $pkg..."
+        fi
+
+        COMMAND=''
+        if command -v brew &>/dev/null; then
+            COMMAND="brew"
+        elif command -v dnf &>/dev/null; then
+            COMMAND="sudo dnf -y"
+            # Check for DNF package aliases
+            pkg=$(map_get "$pkg" "${DNF_PKG_ALIASES[@]}")
+        elif command -v apt-get &>/dev/null; then
+            COMMAND="sudo apt-get -y"
+        fi
+
+        if [ -z "$COMMAND" ]; then
+            echo "No package manager found"
+            exit 1
+        fi
+
+        $COMMAND install $pkg
+    done
+}
+
+
+# function is_git_clean() { git -C $DIR status --porcelain }
+function is_git_clean() {
+    # Check if inside a git repository
+    # git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 128
+    git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 0 # if not a git repo, consider it clean
+
+    # Capture the output and check the exit status
+    output=$(git status --porcelain 2>/dev/null);
+    
+    if [ -z "$output" ]; then
+        return 0 # Clean
+    else
+        return 1 # Dirty
+    fi
+}

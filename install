@@ -6,120 +6,55 @@
 #     stow configs --adopt [--simulate -vvv]
 
 set -e
-{ #prevent exec until fully downloaded?
+{ #prevent exec until fully downloaded
 
     CWD=$(dirname -- "$(readlink -f -- "$0")")
     DIR=~/.dotfiles
     HOME=~/
 
-    function fetch_files() {
-        if [ "$CODESPACES" = true ]; then
-            echo "Running in codespaces..."
-            DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
-        fi
-
-        if [ ! -d $DIR ]; then
-            git clone https://github.com/jsg2021/dotfiles.git $DIR
-            cd $DIR
-            # git submodule update --init --recursive
-        fi
-
-    }
-
-    function install_tools() {
-
-        if [ "$CODESPACES" = true ]; then
-            echo "Running in codespaces...skipping unnecessary tool installs"
-        else
-            sh $CWD/scripts/install-1password
-            sh $CWD/scripts/install-github
-        fi
-
-        if ! command -v fnm &>/dev/null; then
-            curl -fsSLf https://fnm.vercel.app/install | bash
-        fi
-
-        if ! command -v atuin &>/dev/null; then
-            curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
-        fi
-   
-        install_my_tool bat fzf fd-find lsd entr ripgrep stow zoxide tmux neovim
-
-        if [ ! -d ~/.tmux/plugins/tpm ]; then
-            git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
-        fi
-
-        ./configs/.configs/ghostty/setup.sh
-    }
-
-    function install_homebrew() {
-        if ! command -v brew &>/dev/null; then
-            bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
-    }
-
-    function install_configs() {
-        IS_GIT_CLEAN=$(git -C $DIR status --porcelain)
-        if [ -n "$IS_GIT_CLEAN" ]; then
-            echo "Git repository is not clean. Please commit or stash changes before installing configs."
-            exit 1
-        fi
-
-        stow configs --adopt # adopt to prevent stow from complaining about existing files, since we are going to reset hard anyway
-        # verbose:
-        # stow configs --adopt -vvv configs
-        IS_GIT_CLEAN=$(git -C $DIR status --porcelain)
-        if [ -n "$IS_GIT_CLEAN" ]; then
-            echo "Stashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.";
-            git stash --include-untracked
-        fi
-        
-        # set shell
-        if [[ "$SHELL" != $(which zsh) ]]; then
-            chsh -s $(which zsh)
-            if [[ "$OSTYPE" != "darwin"* ]]; then
-                echo "Reboot for SHELL change to take effect."
-            fi
-        fi
-    }
-
-    function install_linux() {
-        if [ "$CODESPACES" = true ]; then
-            echo "Running in codespaces...skip install_linux"
-            return
-        fi
-
-        install_my_tool xclip xsel
-
-        if [ ! -f /usr/local/bin/goto-windows ]; then
-            sudo ln -f -s ~/.dotfiles/scripts/goto-windows &&
-                mkdir -p ~/.local/share/applications &&
-                ln -f -s "$DIR/scripts/uefi-reboot.desktop" ~/.local/share/applications/uefi-reboot.desktop &&
-                ln -f -s "$DIR/scripts/goto-windows.desktop" ~/.local/share/applications/goto-windows.desktop
-        fi
-    }
-
-    function install_macos() {
-        if [ "$CODESPACES" = true ]; then
-            echo "Running in codespaces...skip install_macos"
-            return
-        fi
-
-        install_homebrew
-    }
-
-
-    fetch_files
-
-    source $DIR/scripts/install-function
-
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        install_macos
-    else
-        install_linux
+    #region get dotfiles
+    if [ "$CODESPACES" = true ]; then
+        echo "Running in codespaces..."
+        DIR="/workspaces/.codespaces/.persistedshare/dotfiles"
     fi
 
-    install_tools
-    install_configs
+    if [ ! -d $DIR ]; then
+        git clone https://github.com/jsg2021/dotfiles.git $DIR
+        cd $DIR
+        # git submodule update --init --recursive
+    fi
+    
+    source $CWD/scripts/installers/helpers
+
+    #endregion
+
+    if ! is_git_clean; then
+        echo "Git repository is not clean. Please commit or stash changes before installing configs."
+        exit 1
+    fi
+
+    #region tools
+    if [ "$CODESPACES" = true ]; then
+        echo "Running in codespaces...skip dev os setup"
+        return
+    else    
+        variant=$(uname -s | awk '{print tolower($0)}');
+        sh $CWD/scripts/installers/$variant;
+    fi
+
+    #endregion
+
+    # use adopt to prevent stow from complaining about existing files,
+    # since we are going to reset hard anyway
+    stow configs --adopt # -vvv
+
+    if ! is_git_clean; then
+        echo "Stashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.";
+        git stash --include-untracked
+    fi
+    
+    sh $CWD/scripts/installers/set-zsh
+
+    echo "Installation complete!"
+    echo -e "Note any above instructions...\nthen please restart your terminal to apply changes."
 }

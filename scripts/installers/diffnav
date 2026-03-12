@@ -1,0 +1,22 @@
+#!/bin/bash
+# set -x
+set -e
+
+APP=diffnav
+API="https://api.github.com/repos/dlvhdr/diffnav/releases/latest"
+OS_AND_ARCH=$(uname -s)_$(uname -m)
+
+if ! command -v $APP &> /dev/null; then
+    mkdir -p ~/Downloads
+    curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
+        | jq -r ".assets[] | select(.name | contains(\"$OS_AND_ARCH\")) | .browser_download_url" \
+        | xargs curl -fsSL -o ~/Downloads/$APP.tar.gz
+    
+    tar -xzf ~/Downloads/$APP.tar.gz -C ~/Downloads
+    chmod +x ~/Downloads/$APP
+    mkdir -p ~/.local/bin
+    mv ~/Downloads/$APP ~/.local/bin/$APP
+    rm ~/Downloads/$APP.tar.gz
+else 
+    echo "$APP is already installed, to update remove it first and run this script again"
+fi
