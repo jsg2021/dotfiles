@@ -1,0 +1,28 @@
+#!/bin/bash
+# set -x
+set -e
+
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source $DIR/../helpers
+
+case $(get_distro_id) in
+    darwin)
+        brew install --cask wezterm        
+        ;;
+    fedora|\
+    debian|\
+    ubuntu)
+        mkdir -p ~/Downloads
+        mkdir -p ~/.local/bin
+        API="https://api.github.com/repos/wezterm/wezterm/releases/latest"
+        curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
+            | jq -r ".assets[] | select(.name | endswith(\"AppImage\")) | .browser_download_url" \
+            | xargs curl -fsSL -o ~/Downloads/wezterm.AppImage
+        chmod +x ~/Downloads/wezterm.AppImage
+        mv -f ~/Downloads/wezterm.AppImage ~/.local/bin/wezterm
+        ;;
+    *)
+        echo "...skipping wezterm installation $(get_distro_id)"
+        exit 0
+        ;;
+esac

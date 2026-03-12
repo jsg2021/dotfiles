@@ -1,0 +1,17 @@
+#!/bin/bash
+# set -x
+set -e
+
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+
+
+if [ "$CODESPACES" = true ]; then
+    echo "Running in codespaces...skipping unnecessary tool installs"
+    exit 0;
+fi
+
+sh $DIR/app/1password
+sh $DIR/app/github
+sh $DIR/app/vscode
+sh $DIR/app/ghostty
+sh $DIR/app/wezterm

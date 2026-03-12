@@ -5,17 +5,10 @@ set -e
 DIR=$(dirname -- "$(readlink -f -- "$0")")
 source $DIR/helpers
 
-if [ "$CODESPACES" = true ]; then
-    echo "Running in codespaces...skipping unnecessary tool installs"
-else
-    sh $DIR/1password
-    sh $DIR/github
-    sh $DIR/vscode
-fi
+sh $DIR/apps
 
 install_my_tool bat fzf fd lsd entr ripgrep stow zoxide tmux neovim
 
-sh $DIR/../../configs/.config/ghostty/setup.sh
 sh $DIR/diffnav
 sh $DIR/diff-so-fancy
 

@@ -34,7 +34,7 @@ function install_my_tool() {
         cmd=$(map_get "$pkg" "${PACKAGE_COMMAND_ALIASES[@]}")
 
         if command -v $cmd &>/dev/null; then
-            echo "$pkg is already installed at $cmd, skipping..."
+            # echo "$pkg is already installed at $cmd, skipping..."
             continue
         else
             echo "Installing $pkg..."
@@ -60,8 +60,16 @@ function install_my_tool() {
     done
 }
 
+get_distro_id() {
+    if [[ -f /etc/os-release ]]; then
+        # Use awk to safely extract the ID without sourcing in a function
+        awk -F= '/^ID=/{print tolower($2)}' /etc/os-release
+    else
+        # Fallback for non-Linux systems or very old distributions
+        uname | awk '{print tolower($0)}'
+    fi
+}
 
-# function is_git_clean() { git -C $DIR status --porcelain }
 function is_git_clean() {
     # Check if inside a git repository
     # git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return 128

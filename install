@@ -49,12 +49,11 @@ set -e
     stow configs --adopt # -vvv
 
     if ! is_git_clean; then
-        echo "Stashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.";
+        echo -e "\n\nStashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.\n\n";
         git stash --include-untracked
     fi
     
     sh $CWD/scripts/installers/set-zsh
 
     echo "Installation complete!"
-    echo -e "Note any above instructions...\nthen please restart your terminal to apply changes."
 }

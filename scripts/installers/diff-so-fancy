@@ -14,6 +14,6 @@ if ! command -v diff-so-fancy &> /dev/null; then
     chmod +x ~/Downloads/diff-so-fancy
     mkdir -p ~/.local/bin
     mv ~/Downloads/diff-so-fancy ~/.local/bin/diff-so-fancy
-else 
-    echo "diff-so-fancy is already installed, to update remove it first and run this script again"
+# else 
+    # echo "diff-so-fancy is already installed, to update remove it first and run this script again"
 fi

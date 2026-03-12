@@ -17,6 +17,6 @@ if ! command -v $APP &> /dev/null; then
     mkdir -p ~/.local/bin
     mv ~/Downloads/$APP ~/.local/bin/$APP
     rm ~/Downloads/$APP.tar.gz
-else 
-    echo "$APP is already installed, to update remove it first and run this script again"
+# else 
+    # echo "$APP is already installed, to update remove it first and run this script again"
 fi
