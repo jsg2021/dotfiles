@@ -21,8 +21,11 @@
 
 [core]
 	excludesfile = ~/.dotfiles/configs/git/gitignore
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = diffnav
 	editor = code --wait
+	
+[pager]
+	diff = diffnav
 
 [init]
 	defaultBranch = main
