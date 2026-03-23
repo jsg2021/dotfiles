@@ -11,6 +11,10 @@ if [ -s $BUN_INSTALL/_bun ]; then
     fpath=($BUN_INSTALL $fpath)
 fi
 
+if [ command -v jj &>/dev/null ]; then
+    source <(COMPLETE=$shell jj)
+fi
+
 
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 
