@@ -34,6 +34,18 @@ final_space = true
       style = 'unique'
 
   [[blocks.segments]]
+    type = "jujutsu"
+    style = "plain"
+    foreground = "#ffeb3b"
+    background = "transparent"
+
+    # [options]
+    # fetch_status = true
+    # ignore_working_copy = false
+    # fetch_ahead_counter = true
+    # ahead_icon = "⇡"
+
+  [[blocks.segments]]
     style = 'plain'
     template = ' <#fff>on</>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}<cyan>{{ if gt .Behind 0 }}⇣{{ end }}{{ if gt .Ahead 0 }}⇡{{ end }}</>'
     foreground = '#ff94df'
@@ -41,6 +53,7 @@ final_space = true
     type = 'git'
 
     [blocks.segments.properties]
+      disable_with_jj = true
       branch_icon = ' <#ff94df><b> </b></>'
       commit_icon = '@ '
       fetch_stash_count = true
@@ -58,20 +71,6 @@ final_space = true
 
   [[blocks.segments]]
     style = 'plain'
-    template = '  {{ .Full }} '
-    foreground = '#6CA35E'
-    background = 'transparent'
-    type = 'node'
-
-  [[blocks.segments]]
-    style = 'plain'
-    template = ' {{ .Full }} '
-    foreground = '#ffeb3b'
-    background = 'transparent'
-    type = 'npm'
-
-  [[blocks.segments]]
-    style = 'plain'
     foreground = '#111111'
     background = '#FFD664'
     type = 'upgrade'
@@ -83,8 +82,8 @@ final_space = true
     background = 'transparent'
     type = 'executiontime'
 
-    [blocks.segments.properties]
-      threshold = 5000
+  [blocks.segments.properties]
+    threshold = 5000
 
 [[blocks]]
   type = 'prompt'
