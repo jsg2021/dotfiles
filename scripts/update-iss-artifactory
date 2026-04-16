@@ -1,0 +1,18 @@
+#!/bin/bash
+# set -x 
+set -e
+AD_USER=`op item get "ISS" --reveal --fields Active\ Directory`
+AD_PASS=`op item get "ISS" --reveal --fields password`
+ARTIFACTORY_NPM_TOKEN=`echo "${AD_USER}:${AD_PASS}" | base64`
+
+# if ~/.secrets exists, update it, otherwise create it
+if [ -f ~/.secrets ]; then
+  # if ARTIFACTORY_NPM_TOKEN already exists, update it, otherwise add it
+    if grep -q "ARTIFACTORY_NPM_TOKEN" ~/.secrets; then
+        sed -i '' "s/ARTIFACTORY_NPM_TOKEN=.*/ARTIFACTORY_NPM_TOKEN=${ARTIFACTORY_NPM_TOKEN}/g" ~/.secrets
+    else
+        echo "export ARTIFACTORY_NPM_TOKEN=${ARTIFACTORY_NPM_TOKEN}" >> ~/.secrets
+    fi
+else
+  echo "export ARTIFACTORY_NPM_TOKEN=${ARTIFACTORY_NPM_TOKEN}" >> ~/.secrets
+fi  
