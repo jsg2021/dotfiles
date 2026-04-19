@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# set -x
+set -e
+CWD=`dirname -- "$( readlink -f -- "$0"; )"`
+
+{
+    # AppImageLauncher service
+    if ! command -v AppImageLauncher &> /dev/null; then
+        
+        API="https://api.github.com/repos/TheAssassin/AppImageLauncher/releases/latest"
+
+        if command -v dnf &> /dev/null; then 
+            PATH=$(curl -Ls -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API | jq -r '.assets[] | select(.name | contains("x86_64.rpm")) | .browser_download_url')
+            sudo dnf install https://github.com$PATH;
+            return;
+        fi
+
+    else
+        echo "AppImageLauncher is already installed."
+        # prompt to remove:
+        read -p "Do you want to remove it? (y/n) " -n 1 -r
+        echo    # (optional) move to a new line
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            if command -v dnf &> /dev/null; then 
+                sudo dnf remove AppImageLauncher;
+                return;
+            fi
+            # TODO: add support for other package managers
+        fi
+    fi
+}
