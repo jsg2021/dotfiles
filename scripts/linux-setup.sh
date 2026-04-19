@@ -15,7 +15,7 @@ sudo dnf install fedora-workstation-repositories
 sudo dnf check-update --refresh -y
 sudo dnf update -y
 sudo dnf install \
-    zsh jq gh code fira-code-fonts util-linux-user p7zip p7zip-plugins php-cli \
+    zsh jq fira-code-fonts util-linux-user p7zip p7zip-plugins php-cli \
     gnome-extensions-app gnome-tweak-tool \
     google-chrome-stable \
     remmina \
@@ -25,26 +25,14 @@ sudo dnf install \
 # sudo ln -s $(which gnome-terminal) /usr/local/bin/x-terminal-emulator
 # sudo ln -s $(which konsole) /usr/local/bin/x-terminal-emulator
 
-sudo sh ./install_1password
-# vscode repo
-sudo sh ./install_vscode
-# github cli repo
-sudo sh ./install_github
+sudo sh ./installers/apps/1password
+sudo sh ./installers/apps/vscode
+sudo sh ./installers/apps/github
+sudo sh ./installers/apps/ghostty
+sudo sh ./installers/apps/wezterm
 
-# albert:
-#https://software.opensuse.org/download.html?project=home:manuelschneid3r&package=albert
-
-#flathub
+# flathub
 sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-
-#flatpak install flathub com.github.maoschanz.DynamicWallpaperEditor
-#flatpak install flathub com.spotify.Client
-
-#sudo dnf install snapd -y
-#sudo ln -s /var/lib/snapd/snap /snap
-
-
-sh ./install-app-image-launcher
 
 
 # configure emoji icons
@@ -78,10 +66,10 @@ fc-cache --force
 #Theme
 # https://www.pling.com/p/1230631/ https://github.com/vinceliuice/Qogir-theme (Qogir-win-dark)
 # https://www.pling.com/p/1166289/ (Papirus-Dark)
-#Cursors:
+# Cursors:
 # https://github.com/mustafaozhan/Breeze-Adapta-Cursor (Breeze-Adapta)
 
-#Gnome Extentions
+# Gnome Extensions
 # https://extensions.gnome.org/extension/15/alternatetab/
 # https://extensions.gnome.org/extension/3628/arcmenu/
 # https://extensions.gnome.org/extension/751/audio-output-switcher/
