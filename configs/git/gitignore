@@ -49,3 +49,5 @@ Thumbs.db
 .secrets
 .workspace.json
 Iconr
+
+**/.claude/settings.local.json
