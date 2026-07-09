@@ -1,0 +1,11 @@
+{
+  "theme": "auto",
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "oh-my-posh claude --config ~/.config/ohmyposh/claude-statusline.toml",
+    "padding": 0
+  }
+}

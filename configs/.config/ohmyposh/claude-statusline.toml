@@ -1,0 +1,16 @@
+#:schema https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json
+# Statusline for Claude Code. Rendered by `oh-my-posh claude` (see ~/.claude/settings.json),
+# which feeds this config the live session JSON so the `claude` segment can populate.
+version = 4
+final_space = true
+
+[[blocks]]
+  type = 'prompt'
+  alignment = 'left'
+
+  [[blocks.segments]]
+    type = 'claude'
+    style = 'plain'
+    foreground = '#FF6B35'
+    background = 'transparent'
+    template = '  󰯉 {{ .Model.DisplayName }} {{ .TokenGauge }} {{ .TokenUsagePercent }}%  {{ .FormattedCost }}{{ if or .Cost.TotalLinesAdded .Cost.TotalLinesRemoved }}  <green>+{{ .Cost.TotalLinesAdded }}</><red>/-{{ .Cost.TotalLinesRemoved }}</>{{ end }}'

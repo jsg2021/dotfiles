@@ -15,4 +15,13 @@ fi
 
 eval "$(oh-my-posh init $shell --config ~/.config/oh-my-posh.toml)"
 
+# Show today's Claude Code usage in the prompt via $CCUSAGE_TODAY (an oh-my-posh text
+# segment reads it). ccusage is slow, so ccusage-usage.sh serves a ~60s cache and
+# refreshes in the background, keeping this precmd hook fast.
+if [ -n "$ZSH_VERSION" ]; then
+  autoload -Uz add-zsh-hook
+  _ccusage_precmd() { export CCUSAGE_TODAY="$(bash ~/.config/ohmyposh/ccusage-usage.sh 2>/dev/null)"; }
+  add-zsh-hook precmd _ccusage_precmd
+fi
+
 fi

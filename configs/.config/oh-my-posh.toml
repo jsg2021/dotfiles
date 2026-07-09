@@ -69,6 +69,19 @@ final_space = true
   type = 'rprompt'
   overflow = 'hidden'
 
+  # Today's Claude Code usage (cost · tokens). A precmd hook (in configs/shell/prompt)
+  # exports $CCUSAGE_TODAY from ccusage — cached & refreshed in the background — and this
+  # text segment just displays it. (oh-my-posh removed the `command` segment, and the
+  # native `claude` segment only has data as Claude Code's statusline.)
+  [[blocks.segments]]
+    type = 'text'
+    style = 'plain'
+    foreground = "#FFFFFF"
+    background = "#FF6B35"
+    template = '{{ if .Env.CCUSAGE_TODAY }} 󰯉 {{ .Env.CCUSAGE_TODAY }} {{ end }}'
+
+  # (removed old, non-rendering claude-segment leftover:󰯉 {{ .Model.DisplayName }}  {{ .TokenGauge }} "
+
   [[blocks.segments]]
     style = 'plain'
     foreground = '#111111'
