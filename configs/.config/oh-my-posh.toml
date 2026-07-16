@@ -76,8 +76,8 @@ final_space = true
   [[blocks.segments]]
     type = 'text'
     style = 'plain'
-    foreground = "#FFFFFF"
-    background = "#FF6B35"
+    background = "transparent"
+    foreground = "#FF6B35"
     template = '{{ if .Env.CCUSAGE_TODAY }} 󰯉 {{ .Env.CCUSAGE_TODAY }} {{ end }}'
 
   # (removed old, non-rendering claude-segment leftover:󰯉 {{ .Model.DisplayName }}  {{ .TokenGauge }} "
