@@ -1,11 +1,22 @@
 {
-  "theme": "auto",
-  "permissions": {
-    "defaultMode": "acceptEdits"
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "oh-my-posh claude --config ~/.config/ohmyposh/claude-statusline.toml",
-    "padding": 0
-  }
+	"theme": "auto",
+	"permissions": {
+		"defaultMode": "acceptEdits"
+	},
+	"statusLine": {
+		"type": "command",
+		"command": "oh-my-posh claude --config ~/.config/ohmyposh/claude-statusline.toml",
+		"padding": 0
+	},
+	"enabledPlugins": {
+		"figma@claude-plugins-official": true
+	},
+	"extraKnownMarketplaces": {
+		"claude-plugins-official": {
+			"source": {
+				"source": "github",
+				"repo": "anthropics/claude-plugins-official"
+			}
+		}
+	}
 }
