@@ -69,10 +69,13 @@ final_space = true
   type = 'rprompt'
   overflow = 'hidden'
 
-  # Today's Claude Code usage (cost · tokens). A precmd hook (in configs/shell/prompt)
-  # exports $CCUSAGE_TODAY from ccusage — cached & refreshed in the background — and this
-  # text segment just displays it. (oh-my-posh removed the `command` segment, and the
-  # native `claude` segment only has data as Claude Code's statusline.)
+  # Claude Code usage: today's cost·tokens, the latest session's context-window fill
+  # (ctx %), and time left in the current 5-hour rate-limit window. A precmd hook (in
+  # configs/shell/prompt) exports $CCUSAGE_TODAY from ccusage-usage.sh — cached &
+  # refreshed in the background — and this text segment just displays it. The ctx %
+  # carries its own color tag (green/yellow/red) emitted by the script.
+  # (oh-my-posh removed the `command` segment, and the native `claude` segment only has
+  # data as Claude Code's statusline.)
   [[blocks.segments]]
     type = 'text'
     style = 'plain'
