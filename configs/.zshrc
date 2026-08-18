@@ -76,3 +76,6 @@ zle -N self-insert url-quote-magic
 zle -N bracketed-paste bracketed-paste-magic
 
 typeset -U PATH #deduplicate path elements
+
+# A bare, real directory name navigates there (zoxide's chpwd hook records it).
+setopt AUTO_CD
