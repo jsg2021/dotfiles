@@ -11,9 +11,7 @@ if [ -s $BUN_INSTALL/_bun ]; then
     fpath=($BUN_INSTALL $fpath)
 fi
 
-if [ command -v jj &>/dev/null ]; then
-    source <(COMPLETE=$shell jj)
-fi
+command -v jj >/dev/null 2>&1 && eval "$(COMPLETE=$shell jj)"
 
 
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
@@ -50,6 +48,8 @@ if command -v fnm &>/dev/null; then
     # eval "$(fnm env --use-on-cd)"
     eval "$(fnm env)"
 fi
+
+[ -n "$ZSH_VERSION" ] && command -v beans >/dev/null 2>&1 && eval "$(beans --show-completion)"
 
 [ -f ~/.profile.local ] && source ~/.profile.local
 [ -f ~/.secrets ] && source ~/.secrets
