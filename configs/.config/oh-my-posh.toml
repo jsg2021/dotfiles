@@ -76,12 +76,12 @@ final_space = true
   # carries its own color tag (green/yellow/red) emitted by the script.
   # (oh-my-posh removed the `command` segment, and the native `claude` segment only has
   # data as Claude Code's statusline.)
-  [[blocks.segments]]
-    type = 'text'
-    style = 'plain'
-    background = "transparent"
-    foreground = "#FF6B35"
-    template = '{{ if .Env.CCUSAGE_TODAY }} 󰯉 {{ .Env.CCUSAGE_TODAY }} {{ end }}'
+  # [[blocks.segments]]
+  #   type = 'text'
+  #   style = 'plain'
+  #   background = "transparent"
+  #   foreground = "#FF6B35"
+  #   template = '{{ if .Env.CCUSAGE_TODAY }} 󰯉 {{ .Env.CCUSAGE_TODAY }} {{ end }}'
 
   # (removed old, non-rendering claude-segment leftover:󰯉 {{ .Model.DisplayName }}  {{ .TokenGauge }} "
 

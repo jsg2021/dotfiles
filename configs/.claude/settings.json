@@ -1,22 +1,48 @@
 {
-	"theme": "auto",
-	"permissions": {
-		"defaultMode": "acceptEdits"
-	},
-	"statusLine": {
-		"type": "command",
-		"command": "oh-my-posh claude --config ~/.config/ohmyposh/claude-statusline.toml",
-		"padding": 0
-	},
-	"enabledPlugins": {
-		"figma@claude-plugins-official": true
-	},
-	"extraKnownMarketplaces": {
-		"claude-plugins-official": {
-			"source": {
-				"source": "github",
-				"repo": "anthropics/claude-plugins-official"
-			}
-		}
-	}
+  "permissions": {
+    "allow": [
+      "Bash(graphify query:*)",
+      "Bash(graphify explain:*)",
+      "Bash(graphify path:*)",
+      "Bash(graphify update:*)",
+      "Bash(beans --json ready)",
+      "Bash(beans --json show:*)",
+      "Bash(beans --json list:*)"
+    ],
+    "defaultMode": "auto"
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/jonathan.grimes/.claude/hooks/graphify-hint.sh"
+          },
+          {
+            "type": "command",
+            "command": "/Users/jonathan.grimes/.claude/hooks/beans-hint.sh"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "oh-my-posh claude --config ~/.config/ohmyposh/claude-statusline.toml",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "claude-plugins-official": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/claude-plugins-official"
+      }
+    }
+  },
+  "theme": "auto",
+  "outputStyle": "ELI5"
 }

@@ -1,4 +1,7 @@
+.beans
 .jj
+graphify-out
+node_modules
 
 # Compiled source #
 ###################
@@ -9,7 +12,6 @@
 *.so
 *.pyc
 *.egg-info
-
 
 # Packages #
 ############
@@ -33,8 +35,6 @@
 # generated files #
 ######################
 /target/
-node_modules/
-graphify-out/
 .DS_Store
 .DS_Store?
 ._*

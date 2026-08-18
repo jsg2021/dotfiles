@@ -1,0 +1,17 @@
+{
+  "projects": [],
+  "types": [
+    {
+      "name": "task",
+      "description": ""
+    },
+    {
+      "name": "bug",
+      "description": ""
+    },
+    {
+      "name": "epic",
+      "description": ""
+    }
+  ]
+}

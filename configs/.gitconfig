@@ -21,11 +21,11 @@
 
 [core]
 	excludesfile = ~/.dotfiles/configs/git/gitignore
-	pager = diffnav
 	editor = code --wait
 	
 [pager]
 	diff = diffnav
+	show = diffnav
 
 [init]
 	defaultBranch = main
