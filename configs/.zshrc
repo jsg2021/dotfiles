@@ -38,6 +38,9 @@ autoload -Uz compinit && compinit
 
 zinit cdreplay -q
 
+# beans completion uses compdef, so it must run after compinit
+command -v beans &>/dev/null && eval "$(beans --show-completion 2>/dev/null)"
+
 
 
 # Keybindings

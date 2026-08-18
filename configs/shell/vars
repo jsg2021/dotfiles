@@ -49,7 +49,6 @@ if command -v fnm &>/dev/null; then
     eval "$(fnm env)"
 fi
 
-[ -n "$ZSH_VERSION" ] && command -v beans >/dev/null 2>&1 && eval "$(beans --show-completion)"
 
 [ -f ~/.profile.local ] && source ~/.profile.local
 [ -f ~/.secrets ] && source ~/.secrets
