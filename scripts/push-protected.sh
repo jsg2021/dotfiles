@@ -6,7 +6,11 @@
 # It changes main's *push* access level from its current value (typically
 # "No one") to "Maintainers", runs `git push`, and ALWAYS restores the original
 # protection afterwards via an EXIT trap — even if the push fails or you Ctrl-C.
-# Merge access level and the force-push / code-owner flags are preserved.
+# Merge access level and the code-owner flag are preserved.
+#
+# If the push args contain a force flag (-f, --force, --force-with-lease[=...],
+# or a short bundle like -fu) and the branch has "Allow force push" disabled,
+# that is temporarily enabled too and restored the same way.
 #
 # Auth + host + project are all handled by glab (the GitLab CLI): it reads the
 # current repo from the origin remote and uses your `glab auth` credentials, so
@@ -69,20 +73,21 @@ level_name() {
 
 echo "  current push access : $(level_name "$ORIG_PUSH") ($ORIG_PUSH)"
 echo "  current merge access: $(level_name "$ORIG_MERGE") ($ORIG_MERGE)"
+echo "  current force push  : $ORIG_FORCE"
 
 MAINTAINER=40
 
-# Recreate the protection with a given push access level, preserving everything else.
-# GitLab has no reliable cross-version in-place edit for access levels, so we
-# unprotect then re-protect.
-set_push_level() {
-  local level="$1"
+# Recreate the protection with a given push access level and force-push flag,
+# preserving everything else. GitLab has no reliable cross-version in-place edit
+# for access levels, so we unprotect then re-protect.
+set_protection() {
+  local level="$1" force="$2"
   glab api -X DELETE "${PB}/${BRANCH}" >/dev/null
   glab api -X POST "${PB}" \
     -f "name=${BRANCH}" \
     -f "push_access_level=${level}" \
     -f "merge_access_level=${ORIG_MERGE}" \
-    -f "allow_force_push=${ORIG_FORCE}" \
+    -f "allow_force_push=${force}" \
     -f "code_owner_approval_required=${ORIG_CODEOWNER}" >/dev/null
 }
 
@@ -91,22 +96,46 @@ restore() {
   (( RESTORED )) && return
   RESTORED=1
   echo
-  echo "Restoring push access to $(level_name "$ORIG_PUSH") ($ORIG_PUSH)..."
-  if set_push_level "$ORIG_PUSH"; then
+  echo "Restoring push access to $(level_name "$ORIG_PUSH") ($ORIG_PUSH), force push ${ORIG_FORCE}..."
+  if set_protection "$ORIG_PUSH" "$ORIG_FORCE"; then
     echo "Protection restored."
   else
     echo "!! FAILED to restore protection — restore manually in GitLab:" >&2
-    echo "   Settings > Repository > Protected branches > ${BRANCH} > Allowed to push: $(level_name "$ORIG_PUSH")" >&2
+    echo "   Settings > Repository > Protected branches > ${BRANCH}" >&2
+    echo "     Allowed to push: $(level_name "$ORIG_PUSH")" >&2
+    echo "     Allow force push: ${ORIG_FORCE}" >&2
   fi
 }
 
+# --- Does the requested push need force? -----------------------------------
+# Scan the git push args for a force flag: --force, --force-with-lease[=...],
+# or a short-option bundle containing 'f' (-f, -fu, ...). Everything after a
+# bare `--` is a refspec, not a flag.
+FORCE_REQUESTED=0
+for arg in "$@"; do
+  case "$arg" in
+    --) break ;;
+    --force|--force-with-lease|--force-with-lease=*) FORCE_REQUESTED=1 ;;
+    --*) ;;
+    -[!-]*) [[ "$arg" == *f* ]] && FORCE_REQUESTED=1 ;;
+  esac
+done
+
+DESIRED_PUSH="$ORIG_PUSH"
+DESIRED_FORCE="$ORIG_FORCE"
+[[ "$ORIG_PUSH" == "$MAINTAINER" ]] || DESIRED_PUSH="$MAINTAINER"
+if (( FORCE_REQUESTED )) && [[ "$ORIG_FORCE" != "true" ]]; then
+  DESIRED_FORCE=true
+fi
+
 # --- Relax, push, restore -------------------------------------------------
-if [[ "$ORIG_PUSH" == "$MAINTAINER" ]]; then
-  echo "Push access is already 'Maintainers'; leaving protection unchanged."
+if [[ "$DESIRED_PUSH" == "$ORIG_PUSH" && "$DESIRED_FORCE" == "$ORIG_FORCE" ]]; then
+  echo "Protection already allows this push; leaving it unchanged."
 else
   trap restore EXIT
-  echo "Relaxing push access to 'Maintainers' (40)..."
-  set_push_level "$MAINTAINER"
+  [[ "$DESIRED_PUSH" == "$ORIG_PUSH" ]] || echo "Relaxing push access to 'Maintainers' (40)..."
+  [[ "$DESIRED_FORCE" == "$ORIG_FORCE" ]] || echo "Force flag detected — enabling 'Allow force push'..."
+  set_protection "$DESIRED_PUSH" "$DESIRED_FORCE"
   echo "Done."
 fi
 
