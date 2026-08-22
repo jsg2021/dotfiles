@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Generic recording stub: logs the call and succeeds without doing anything.
+printf '%s %s\n' "$(basename "$0")" "$*" >> "${STUB_LOG:-/tmp/stub.log}"
+exit 0

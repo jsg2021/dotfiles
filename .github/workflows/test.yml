@@ -1,0 +1,74 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: unit (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install zsh and jq
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            sudo apt-get update
+            sudo apt-get install -y --no-install-recommends zsh jq
+          else
+            command -v jq >/dev/null || brew install jq
+          fi
+
+      - name: Run unit tests
+        run: ./tests/run
+
+  container:
+    name: install (${{ matrix.base }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        base:
+          - debian:bookworm-slim
+          - fedora:41
+    # The runner is x86_64; the arch-alt scenario covers arm64 asset picking
+    # without paying for emulation.
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run install scenarios in a container
+        run: ./tests/run --container --base "${{ matrix.base }}"
+
+  shellcheck:
+    name: shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: sudo apt-get update && sudo apt-get install -y shellcheck
+
+      # Errors only: warnings in these scripts are mostly stylistic.
+      - name: Lint shell scripts
+        run: |
+          mapfile -t files < <(
+            find install scripts tests -type f ! -name '*.zip' ! -name '*.md' \
+              | while read -r f; do
+                  head -c 200 "$f" | grep -qE '^#!.*(bash|/sh)' && echo "$f"
+                done
+          )
+          printf 'checking %d files\n' "${#files[@]}"
+          shellcheck --severity=error --external-sources "${files[@]}"

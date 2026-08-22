@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# Records the privileged command but never runs it. Tests must not touch /etc.
+printf 'sudo %s\n' "$*" >> "${STUB_LOG:-/tmp/stub.log}"
+exit 0

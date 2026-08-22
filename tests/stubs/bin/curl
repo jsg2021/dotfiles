@@ -1,0 +1,89 @@
+#!/usr/bin/env bash
+# Offline curl. Fakes the two shapes the installers use:
+#   1. GitHub "latest release" API queries  -> synthetic JSON the jq filters match
+#   2. asset downloads with -o <file>       -> a plausible file at that path
+# Anything else prints nothing, so `curl ... | bash` bootstrap installers no-op.
+set -e
+printf 'curl %s\n' "$*" >> "${STUB_LOG:-/tmp/stub.log}"
+
+out=''
+url=''
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -o|--output) out="$2"; shift 2 ;;
+        -*) shift ;;
+        *) url="$1"; shift ;;
+    esac
+done
+
+if [ -n "$out" ]; then
+    mkdir -p "$(dirname "$out")"
+    base=$(basename "$out")
+    case "$base" in
+        *.tar.gz)
+            inner="${base%.tar.gz}"
+            tmp=$(mktemp -d)
+            printf '#!/bin/sh\necho stub %s\n' "$inner" > "$tmp/$inner"
+            chmod +x "$tmp/$inner"
+            tar -czf "$out" -C "$tmp" "$inner"
+            rm -rf "$tmp"
+            ;;
+        *.zip)
+            : > "$out"
+            ;;
+        *)
+            printf '#!/bin/sh\necho stub %s\n' "${base%.*}" > "$out"
+            chmod +x "$out"
+            ;;
+    esac
+    exit 0
+fi
+
+# Serves each repo its own asset list, with every arch a real release carries.
+# A filter that does not pin the architecture then matches more than one asset,
+# and github_asset_url is expected to refuse rather than guess.
+case "$url" in
+    *api.github.com/repos/*/releases*)
+        repo=$(printf '%s' "$url" | sed -n 's|.*/repos/\([^/]*/[^/]*\)/releases.*|\1|p')
+        case "$repo" in
+            dlvhdr/diffnav)
+                assets='
+  {"name":"diffnav_Linux_x86_64.tar.gz","browser_download_url":"https://stub.invalid/diffnav_Linux_x86_64.tar.gz"},
+  {"name":"diffnav_Linux_arm64.tar.gz","browser_download_url":"https://stub.invalid/diffnav_Linux_arm64.tar.gz"},
+  {"name":"diffnav_Linux_i386.tar.gz","browser_download_url":"https://stub.invalid/diffnav_Linux_i386.tar.gz"},
+  {"name":"diffnav_Darwin_x86_64.tar.gz","browser_download_url":"https://stub.invalid/diffnav_Darwin_x86_64.tar.gz"},
+  {"name":"diffnav_Darwin_arm64.tar.gz","browser_download_url":"https://stub.invalid/diffnav_Darwin_arm64.tar.gz"}'
+                ;;
+            so-fancy/diff-so-fancy)
+                assets='
+  {"name":"diff-so-fancy","browser_download_url":"https://stub.invalid/diff-so-fancy"}'
+                ;;
+            pkgforge-dev/ghostty-appimage)
+                assets='
+  {"name":"Ghostty-0.0.0-x86_64.AppImage","browser_download_url":"https://stub.invalid/Ghostty-x86_64.AppImage"},
+  {"name":"Ghostty-0.0.0-x86_64.AppImage.zsync","browser_download_url":"https://stub.invalid/Ghostty-x86_64.AppImage.zsync"},
+  {"name":"Ghostty-0.0.0-aarch64.AppImage","browser_download_url":"https://stub.invalid/Ghostty-aarch64.AppImage"},
+  {"name":"Ghostty-0.0.0-aarch64.AppImage.zsync","browser_download_url":"https://stub.invalid/Ghostty-aarch64.AppImage.zsync"}'
+                ;;
+            wezterm/wezterm)
+                assets='
+  {"name":"WezTerm-0.0.0-Ubuntu20.04.AppImage","browser_download_url":"https://stub.invalid/WezTerm-Ubuntu20.04.AppImage"},
+  {"name":"wezterm-0.0.0.Debian12.arm64.deb","browser_download_url":"https://stub.invalid/wezterm-Debian12.arm64.deb"},
+  {"name":"wezterm-0.0.0.Ubuntu22.04.arm64.deb","browser_download_url":"https://stub.invalid/wezterm-Ubuntu22.04.arm64.deb"},
+  {"name":"wezterm-0.0.0.Debian12.deb","browser_download_url":"https://stub.invalid/wezterm-Debian12.deb"}'
+                ;;
+            TheAssassin/AppImageLauncher)
+                assets='
+  {"name":"appimagelauncher_0.0.0_x86_64.rpm","browser_download_url":"https://stub.invalid/ail_x86_64.rpm"},
+  {"name":"appimagelauncher_0.0.0_aarch64.rpm","browser_download_url":"https://stub.invalid/ail_aarch64.rpm"},
+  {"name":"appimagelauncher_0.0.0_amd64.deb","browser_download_url":"https://stub.invalid/ail_amd64.deb"},
+  {"name":"appimagelauncher_0.0.0_arm64.deb","browser_download_url":"https://stub.invalid/ail_arm64.deb"}'
+                ;;
+            *)
+                assets=''
+                ;;
+        esac
+        printf '{"tag_name":"v0.0.0-stub","assets":[%s\n]}\n' "$assets"
+        ;;
+esac
+exit 0
