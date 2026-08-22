@@ -6,7 +6,17 @@ APP=diffnav
 API="https://api.github.com/repos/dlvhdr/diffnav/releases/latest"
 OS_AND_ARCH=$(uname -s)_$(uname -m)
 
-if ! command -v $APP &> /dev/null; then
+DIR=$(cd -- "$(dirname -- "$0")" && pwd)
+source "$DIR/helpers"
+
+# has_binary, not command -v: this script shares its name with the binary it
+# installs, so a plain lookup can find the script itself and skip the install.
+if ! has_binary $APP; then
+    if has_binary brew; then
+        brew install $APP
+        exit 0
+    fi
+
     mkdir -p ~/Downloads
     curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
         | jq -r ".assets[] | select(.name | contains(\"$OS_AND_ARCH\")) | .browser_download_url" \

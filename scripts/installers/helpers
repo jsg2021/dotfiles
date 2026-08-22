@@ -2,20 +2,25 @@
 set -e
 # set -x
 
-DNF_PKG_ALIASES=(
-    "fd fd-find"
+INSTALLERS_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)
+
+# Maps a binary name to its package name, only when the two differ.
+BINARY_PKG_ALIASES=(
+    "rg ripgrep"
+    "nvim neovim"
+    "delta git-delta"
 )
 
-PACKAGE_COMMAND_ALIASES=(
-    "ripgrep rg"
-    "neovim nvim"
+# Per-package-manager overrides, also keyed by binary name.
+DNF_BINARY_PKG_ALIASES=(
+    "fd fd-find"
 )
 
 function map_get() {
     local key="$1"
     shift
     local -a map=("$@")
-    
+
     for entry in "${map[@]}"; do
         IFS=' ' read -r map_key map_value <<< "$entry"
         if [ "$key" = "$map_key" ]; then
@@ -23,30 +28,53 @@ function map_get() {
             return 0
         fi
     done
-    
+
     echo "$key"
     return 0
 }
 
+# Looks for a binary, ignoring "." and the installers dir on PATH.
+# Without this, a local installer script shadows the binary it installs.
+function has_binary() {
+    local entry
+    local clean_path=''
+    local -a parts
+
+    IFS=':' read -r -a parts <<< "$PATH"
+    for entry in "${parts[@]}"; do
+        case "$entry" in
+            ''|'.'|"$INSTALLERS_DIR") continue ;;
+        esac
+        clean_path="${clean_path:+$clean_path:}$entry"
+    done
+
+    PATH="$clean_path" command -v "$1" &>/dev/null
+}
+
 function install_my_tool() {
-    for pkg in "$@"; do
+    for bin in "$@"; do
 
-        cmd=$(map_get "$pkg" "${PACKAGE_COMMAND_ALIASES[@]}")
-
-        if command -v $cmd &>/dev/null; then
-            # echo "$pkg is already installed at $cmd, skipping..."
+        if has_binary "$bin"; then
+            # echo "$bin is already installed, skipping..."
             continue
         else
-            echo "Installing $pkg..."
+            echo "Installing $bin..."
         fi
+
+        # A local installer script wins over the package manager.
+        if [ -f "$INSTALLERS_DIR/$bin" ]; then
+            bash "$INSTALLERS_DIR/$bin"
+            continue
+        fi
+
+        pkg=$(map_get "$bin" "${BINARY_PKG_ALIASES[@]}")
 
         COMMAND=''
         if command -v brew &>/dev/null; then
             COMMAND="brew"
         elif command -v dnf &>/dev/null; then
             COMMAND="sudo dnf -y"
-            # Check for DNF package aliases
-            pkg=$(map_get "$pkg" "${DNF_PKG_ALIASES[@]}")
+            pkg=$(map_get "$bin" "${DNF_BINARY_PKG_ALIASES[@]}")
         elif command -v apt-get &>/dev/null; then
             COMMAND="sudo apt-get -y"
         fi
