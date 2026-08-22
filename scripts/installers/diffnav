@@ -3,30 +3,34 @@
 set -e
 
 APP=diffnav
-API="https://api.github.com/repos/dlvhdr/diffnav/releases/latest"
-OS_AND_ARCH=$(uname -s)_$(uname -m)
 
 DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 source "$DIR/helpers"
 
 # has_binary, not command -v: this script shares its name with the binary it
 # installs, so a plain lookup can find the script itself and skip the install.
-if ! has_binary $APP; then
-    if has_binary brew; then
-        brew install $APP
-        exit 0
-    fi
-
-    mkdir -p ~/Downloads
-    curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
-        | jq -r ".assets[] | select(.name | contains(\"$OS_AND_ARCH\")) | .browser_download_url" \
-        | xargs curl -fsSL -o ~/Downloads/$APP.tar.gz
-    
-    tar -xzf ~/Downloads/$APP.tar.gz -C ~/Downloads
-    chmod +x ~/Downloads/$APP
-    mkdir -p ~/.local/bin
-    mv ~/Downloads/$APP ~/.local/bin/$APP
-    rm ~/Downloads/$APP.tar.gz
-# else 
-    # echo "$APP is already installed, to update remove it first and run this script again"
+if has_binary $APP; then
+    exit 0
 fi
+
+if has_binary brew; then
+    brew install $APP
+    exit 0
+fi
+
+# Assets are named diffnav_Linux_x86_64 / diffnav_Linux_arm64 -- goreleaser
+# keeps x86_64 but renames aarch64 to arm64, so `uname -m` alone is not enough.
+SUFFIX="_$(uname -s)_$(arch_for mixed).tar.gz"
+URL=$(github_asset_url dlvhdr/$APP "$SUFFIX")
+
+if [ -z "$URL" ]; then
+    echo "No $APP release asset matching *$SUFFIX"
+    exit 1
+fi
+
+download_to ~/Downloads/$APP.tar.gz "$URL"
+tar -xzf ~/Downloads/$APP.tar.gz -C ~/Downloads
+chmod +x ~/Downloads/$APP
+mkdir -p ~/.local/bin
+mv -f ~/Downloads/$APP ~/.local/bin/$APP
+rm -f ~/Downloads/$APP.tar.gz

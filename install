@@ -24,6 +24,15 @@ set -e
         # git submodule update --init --recursive
     fi
     
+    # When piped (curl | bash) $0 is not a real path, so $CWD is junk.
+    # The clone above guarantees $DIR, so fall back to it.
+    if [ ! -f "$CWD/scripts/installers/helpers" ]; then
+        CWD="$DIR"
+    fi
+
+    # Everything below (git checks, stow's .stowrc) assumes we sit in the repo.
+    cd $CWD
+
     source $CWD/scripts/installers/helpers
 
     #endregion
@@ -36,24 +45,23 @@ set -e
     #region tools
     if [ "$CODESPACES" = true ]; then
         echo "Running in codespaces...skip dev os setup"
-        return
-    else    
+    else
         variant=$(uname -s | awk '{print tolower($0)}');
-        sh $CWD/scripts/installers/$variant;
+        "$CWD/scripts/installers/$variant";
     fi
 
     #endregion
 
     # use adopt to prevent stow from complaining about existing files,
     # since we are going to reset hard anyway
-    stow configs --adopt # -vvv
+    stow --dir="$CWD" --target="$HOME" configs --adopt # -vvv
 
     if ! is_git_clean; then
         echo -e "\n\nStashing old .dotfiles that we just replaced... inspect the stash and recover or drop as needed.\n\n";
         git stash --include-untracked
     fi
     
-    sh $CWD/scripts/installers/set-zsh
+    "$CWD/scripts/installers/set-zsh"
 
     echo "Installation complete!"
 }

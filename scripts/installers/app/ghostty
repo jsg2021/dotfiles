@@ -3,22 +3,28 @@
 set -e
 
 DIR=$(dirname -- "$(readlink -f -- "$0")")
-source $DIR/../helpers
+source "$DIR/../helpers"
 
 case $(get_distro_id) in
     darwin)
-        brew install --cask ghostty        
+        brew install --cask ghostty
         ;;
     fedora|\
     debian|\
     ubuntu)
-        mkdir -p ~/Downloads
-        mkdir -p ~/.local/bin
-        API="https://api.github.com/repos/pkgforge-dev/ghostty-appimage/releases/latest"
-        curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
-            | jq -r ".assets[] | select(.name | endswith(\"AppImage\")) | .browser_download_url" \
-            | xargs curl -fsSL -o ~/Downloads/ghostty.AppImage
+        # The release ships one AppImage per arch (…-aarch64.AppImage,
+        # …-x86_64.AppImage). Matching on ".AppImage" alone returns both.
+        SUFFIX="-$(arch_for uname).AppImage"
+        URL=$(github_asset_url pkgforge-dev/ghostty-appimage "$SUFFIX")
+
+        if [ -z "$URL" ]; then
+            echo "...skipping ghostty: no AppImage matching *$SUFFIX"
+            exit 0
+        fi
+
+        download_to ~/Downloads/ghostty.AppImage "$URL"
         chmod +x ~/Downloads/ghostty.AppImage
+        mkdir -p ~/.local/bin
         mv -f ~/Downloads/ghostty.AppImage ~/.local/bin/ghostty
         ;;
     *)
@@ -27,4 +33,4 @@ case $(get_distro_id) in
         ;;
 esac
 
-sh $DIR/../../../configs/.config/ghostty/setup.sh
+"$DIR/../../../configs/.config/ghostty/setup.sh"

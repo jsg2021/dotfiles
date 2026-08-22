@@ -33,22 +33,103 @@ function map_get() {
     return 0
 }
 
-# Looks for a binary, ignoring "." and the installers dir on PATH.
-# Without this, a local installer script shadows the binary it installs.
-function has_binary() {
+# PATH with "." and our own installer dirs removed. Without this, an installer
+# script named after the binary it installs (docker, diffnav, ghostty...) would
+# look like the binary itself.
+function _lookup_path() {
     local entry
-    local clean_path=''
+    local cleaned=''
     local -a parts
 
     IFS=':' read -r -a parts <<< "$PATH"
     for entry in "${parts[@]}"; do
         case "$entry" in
-            ''|'.'|"$INSTALLERS_DIR") continue ;;
+            ''|'.'|"$INSTALLERS_DIR"|"$INSTALLERS_DIR/app") continue ;;
         esac
-        clean_path="${clean_path:+$clean_path:}$entry"
+        cleaned="${cleaned:+$cleaned:}$entry"
     done
 
-    PATH="$clean_path" command -v "$1" &>/dev/null
+    echo "$cleaned"
+}
+
+# Resolves a binary to its full path, or prints nothing if it is not installed.
+# Use this instead of `which`, which is missing on minimal images.
+function binary_path() {
+    PATH="$(_lookup_path)" command -v "$1" 2>/dev/null
+}
+
+# The one way to ask "is this installed?". Use this instead of `command -v`.
+function has_binary() {
+    PATH="$(_lookup_path)" command -v "$1" &>/dev/null
+}
+
+# Release assets are named with several different arch vocabularies. Ask for
+# the one the project actually uses instead of guessing.
+#
+#   uname   x86_64  aarch64  armv7l   -- `uname -m`; AppImages, rpms
+#   go      amd64   arm64    arm      -- Go/goreleaser, Docker, .deb
+#   mixed   x86_64  arm64             -- goreleaser's default asset template
+function arch_for() {
+    local m
+    m=$(uname -m)
+
+    case "$1" in
+        uname)
+            echo "$m"
+            ;;
+        go)
+            case "$m" in
+                x86_64|amd64)  echo amd64 ;;
+                aarch64|arm64) echo arm64 ;;
+                armv7l|armhf)  echo arm ;;
+                *)             echo "$m" ;;
+            esac
+            ;;
+        mixed)
+            case "$m" in
+                x86_64|amd64)  echo x86_64 ;;
+                aarch64|arm64) echo arm64 ;;
+                *)             echo "$m" ;;
+            esac
+            ;;
+        *)
+            echo "arch_for: unknown flavour '$1'" >&2
+            return 1
+            ;;
+    esac
+}
+
+# github_asset_url <owner/repo> <asset-name-suffix>
+# The download URL of the latest release asset whose name ends with <suffix>.
+# Prints nothing when nothing matches, so callers must check before using it.
+# Always match on a suffix that pins the architecture; several projects ship
+# one asset per arch and a loose filter silently returns more than one.
+function github_asset_url() {
+    local urls count
+
+    urls=$(curl -sL -H "Accept: application/vnd.github+json" \
+                    -H "X-GitHub-Api-Version: 2022-11-28" \
+                    "https://api.github.com/repos/$1/releases/latest" \
+           | jq -r --arg suffix "$2" \
+               '.assets[] | select(.name | endswith($suffix)) | .browser_download_url')
+
+    count=$(printf '%s' "$urls" | grep -c . || true)
+
+    # Two matches means the filter is not pinning the architecture. Downloading
+    # whichever came back first is how you end up with an x86_64 binary on arm.
+    if [ "$count" -gt 1 ]; then
+        echo "github_asset_url: '$2' matched $count assets in $1:" >&2
+        printf '%s\n' "$urls" | sed 's/^/  /' >&2
+        return 1
+    fi
+
+    printf '%s' "$urls"
+}
+
+# download_to <destination-path> <url>
+function download_to() {
+    mkdir -p "$(dirname "$1")"
+    curl -fsSL -o "$1" "$2"
 }
 
 function install_my_tool() {
@@ -63,19 +144,23 @@ function install_my_tool() {
 
         # A local installer script wins over the package manager.
         if [ -f "$INSTALLERS_DIR/$bin" ]; then
-            bash "$INSTALLERS_DIR/$bin"
+            "$INSTALLERS_DIR/$bin"
             continue
         fi
 
         pkg=$(map_get "$bin" "${BINARY_PKG_ALIASES[@]}")
 
         COMMAND=''
-        if command -v brew &>/dev/null; then
+        if has_binary brew; then
             COMMAND="brew"
-        elif command -v dnf &>/dev/null; then
+        elif has_binary dnf; then
             COMMAND="sudo dnf -y"
-            pkg=$(map_get "$bin" "${DNF_BINARY_PKG_ALIASES[@]}")
-        elif command -v apt-get &>/dev/null; then
+            # The dnf map only overrides; fall back to the shared aliases.
+            dnf_pkg=$(map_get "$bin" "${DNF_BINARY_PKG_ALIASES[@]}")
+            if [ "$dnf_pkg" != "$bin" ]; then
+                pkg="$dnf_pkg"
+            fi
+        elif has_binary apt-get; then
             COMMAND="sudo apt-get -y"
         fi
 

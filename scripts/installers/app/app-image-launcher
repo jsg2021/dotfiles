@@ -1,0 +1,76 @@
+#!/bin/bash
+# set -x
+set -e
+
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source "$DIR/../helpers"
+
+REPO=TheAssassin/AppImageLauncher
+# The package is lowercase; the binary it ships is not.
+PKG=appimagelauncher
+BIN=AppImageLauncher
+
+function require_url() {
+    if [ -z "$1" ]; then
+        echo "No $2 asset in the latest AppImageLauncher release."
+        exit 1
+    fi
+}
+
+#region uninstall
+if has_binary "$BIN"; then
+    echo "AppImageLauncher is already installed."
+
+    # Never block an unattended install; only ask when someone is watching.
+    if [ ! -t 0 ]; then
+        exit 0
+    fi
+
+    read -p "Do you want to remove it? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 0
+    fi
+
+    if has_binary dnf; then
+        sudo dnf remove -y "$PKG"
+    elif has_binary apt-get; then
+        sudo apt-get remove -y "$PKG"
+    else
+        echo "No supported package manager; remove $PKG by hand."
+        exit 0
+    fi
+
+    exit 0
+fi
+#endregion
+
+#region install
+if has_binary dnf; then
+
+    # dnf installs straight from a URL. Assets are ..._x86_64.rpm /
+    # ..._aarch64.rpm / ..._armv7hl.rpm, matching `uname -m`.
+    URL=$(github_asset_url "$REPO" "_$(arch_for uname).rpm")
+    require_url "$URL" "$(arch_for uname) rpm"
+    sudo dnf install -y "$URL"
+
+elif has_binary apt-get; then
+
+    # apt cannot fetch a package by URL, so download it first. Installing the
+    # local file through apt-get (not dpkg) pulls in its dependencies.
+    # dpkg is authoritative here (it knows about an i386 userland on an amd64
+    # kernel); arch_for go is the fallback shape.
+    ARCH=$(dpkg --print-architecture 2>/dev/null || arch_for go)
+    URL=$(github_asset_url "$REPO" "_$ARCH.deb")
+    require_url "$URL" "$ARCH deb"
+
+    download_to ~/Downloads/$PKG.deb "$URL"
+    sudo apt-get update
+    sudo apt-get install -y ~/Downloads/$PKG.deb
+    rm -f ~/Downloads/$PKG.deb
+
+else
+    echo "...skipping AppImageLauncher installation $(get_distro_id)"
+    exit 0
+fi
+#endregion

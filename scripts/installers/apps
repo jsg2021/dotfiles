@@ -10,8 +10,11 @@ if [ "$CODESPACES" = true ]; then
     exit 0;
 fi
 
-sh $DIR/app/1password
-sh $DIR/app/github
-sh $DIR/app/vscode
-sh $DIR/app/ghostty
-sh $DIR/app/wezterm
+"$DIR/app/1password"
+"$DIR/app/github"
+"$DIR/app/vscode"
+"$DIR/app/ghostty"
+"$DIR/app/wezterm"
+
+# app-image-launcher is deliberately not run here; it is a manual, interactive
+# script. Run it yourself:  ~/.dotfiles/scripts/installers/app/app-image-launcher

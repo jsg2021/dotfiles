@@ -2,22 +2,25 @@
 # set -x
 set -e
 
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source "$DIR/../helpers"
 
 
-if ! command -v gh &> /dev/null; then
 
-    if command -v brew &> /dev/null; then 
+if ! has_binary gh; then
+
+    if has_binary brew; then
         brew install gh
 
-    elif command -v dnf &> /dev/null; then 
+    elif has_binary dnf; then
 
         sudo dnf install 'dnf-command(config-manager)'
         sudo dnf config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
         sudo dnf install gh
 
-    elif command -v apt-get &> /dev/null; then
+    elif has_binary apt-get; then
 
-        type -p curl >/dev/null || (sudo apt update && sudo apt install curl -y)
+        has_binary curl || sudo apt-get install -y curl
         curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
         && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
         && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
