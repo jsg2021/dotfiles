@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Passthrough uname, except `-m` when FAKE_ARCH is set. Lets one container
+# exercise the asset picking for the CPU architecture it is not running on,
+# which is far cheaper than emulating a whole other platform.
+REAL=/usr/bin/uname
+[ -x "$REAL" ] || REAL=/bin/uname
+
+if [ -n "${FAKE_ARCH:-}" ]; then
+    case "$*" in
+        -m|--machine) echo "$FAKE_ARCH"; exit 0 ;;
+    esac
+fi
+
+exec "$REAL" "$@"

@@ -1,0 +1,85 @@
+#!/usr/bin/env bash
+# Test harness for the dotfiles installer.
+#
+#   ./tests/run                 unit tests only (fast, no Docker)
+#   ./tests/run --container     unit tests + every scenario in Docker
+#   ./tests/run --container fresh dirty-repo
+#   ./tests/run --container --base fedora:41
+#   ./tests/run --container --platform linux/amd64   test the other CPU arch
+#   ./tests/run --container --real fresh     actually hit the network (slow)
+#   ./tests/run --shell                      drop into the sandbox container
+set -uo pipefail
+
+REPO=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+IMAGE_PREFIX=dotfiles-test
+BASE=debian:bookworm-slim
+PLATFORM=''
+WANT_CONTAINER=0
+WANT_SHELL=0
+REAL=0
+SCENARIOS=()
+
+ALL_SCENARIOS=(fresh arch-alt idempotent dirty-repo existing-configs codespaces piped)
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+        --container|-c) WANT_CONTAINER=1; shift ;;
+        --shell)        WANT_CONTAINER=1; WANT_SHELL=1; shift ;;
+        --real)         REAL=1; shift ;;
+        --base)         BASE="$2"; shift 2 ;;
+        --platform)     PLATFORM="$2"; shift 2 ;;
+        -h|--help)      sed -n '2,12p' "$0" | sed 's/^# \{0,1\}//'; exit 0 ;;
+        -*)             echo "unknown flag: $1" >&2; exit 2 ;;
+        *)              SCENARIOS+=("$1"); shift ;;
+    esac
+done
+
+if [ -t 1 ]; then B=$'\033[1m'; R=$'\033[31m'; G=$'\033[32m'; O=$'\033[0m'
+else B=''; R=''; G=''; O=''; fi
+
+FAILED=0
+
+# ---------------------------------------------------------------- unit tests
+if [ "$WANT_SHELL" -eq 0 ]; then
+    for t in "$REPO"/tests/unit/*.test.sh; do
+        printf '\n%s######## %s ########%s\n' "$B" "$(basename "$t")" "$O"
+        bash "$t" || FAILED=1
+    done
+fi
+
+# ----------------------------------------------------------- container tests
+if [ "$WANT_CONTAINER" -eq 1 ]; then
+    if ! command -v docker >/dev/null 2>&1; then
+        echo "${R}docker not found — cannot run container tests${O}" >&2
+        exit 1
+    fi
+
+    TAG="$IMAGE_PREFIX:$(echo "$BASE${PLATFORM:+-$PLATFORM}" | tr ':/' '--')"
+    printf '\n%s######## building %s (base %s%s) ########%s\n' \
+        "$B" "$TAG" "$BASE" "${PLATFORM:+, platform $PLATFORM}" "$O"
+
+    BUILD=(docker build --build-arg "BASE=$BASE" -t "$TAG")
+    [ -n "$PLATFORM" ] && BUILD+=(--platform "$PLATFORM")
+    "${BUILD[@]}" "$REPO/tests/container" || exit 1
+
+    DOCKER_RUN=(docker run --rm -v "$REPO:/src:ro")
+    [ -n "$PLATFORM" ] && DOCKER_RUN+=(--platform "$PLATFORM")
+    [ "$REAL" -eq 1 ] && DOCKER_RUN+=(-e REAL_INSTALL=1)
+    [ "$REAL" -eq 0 ] && DOCKER_RUN+=(--network none)
+
+    if [ "$WANT_SHELL" -eq 1 ]; then
+        exec "${DOCKER_RUN[@]}" --entrypoint /bin/bash -it "$TAG"
+    fi
+
+    [ ${#SCENARIOS[@]} -eq 0 ] && SCENARIOS=("${ALL_SCENARIOS[@]}")
+
+    for s in "${SCENARIOS[@]}"; do
+        printf '\n%s######## container scenario: %s ########%s\n' "$B" "$s" "$O"
+        "${DOCKER_RUN[@]}" "$TAG" "$s" || FAILED=1
+    done
+fi
+
+printf '\n%s' "$B"
+if [ "$FAILED" -eq 0 ]; then printf '%sALL GREEN%s\n' "$G" "$O"
+else printf '%sSOME TESTS FAILED%s\n' "$R" "$O"; fi
+exit "$FAILED"
