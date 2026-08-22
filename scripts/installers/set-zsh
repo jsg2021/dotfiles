@@ -2,9 +2,20 @@
 # set -x
 set -e
 
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source "$DIR/helpers"
+
+# binary_path, not `which`: `which` is missing on minimal images (Fedora 41+).
+ZSH_PATH=$(binary_path zsh)
+
+if [ -z "$ZSH_PATH" ]; then
+    echo "zsh is not installed; skipping login shell change."
+    exit 0
+fi
+
 # set shell
-if [[ "$SHELL" != $(which zsh) ]]; then
-    chsh -s $(which zsh)
+if [[ "$SHELL" != "$ZSH_PATH" ]]; then
+    chsh -s "$ZSH_PATH"
     if [[ "$OSTYPE" != "darwin"* ]]; then
         echo "Reboot for SHELL change to take effect."
     fi

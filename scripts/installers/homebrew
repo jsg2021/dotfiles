@@ -2,7 +2,10 @@
 # set -x
 set -e
 
-if ! command -v brew &>/dev/null; then
+DIR=$(dirname -- "$(readlink -f -- "$0")")
+source "$DIR/helpers"
+
+if ! has_binary brew; then
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     # eval "$(/opt/homebrew/bin/brew shellenv)"
     eval "$(/opt/homebrew/bin/brew shellenv zsh)"

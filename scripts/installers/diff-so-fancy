@@ -2,22 +2,26 @@
 # set -x
 set -e
 
-API="https://api.github.com/repos/so-fancy/diff-so-fancy/releases/latest"
+APP=diff-so-fancy
 
 DIR=$(cd -- "$(dirname -- "$0")" && pwd)
 source "$DIR/helpers"
 
 # has_binary, not command -v: this script shares its name with the binary it
 # installs, so a plain lookup can find the script itself and skip the install.
-if ! has_binary diff-so-fancy; then
-    mkdir -p ~/Downloads
-    curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
-        | jq -r '.assets[] | select(.name | contains("diff-so-fancy")) | .browser_download_url' \
-        | xargs curl -fsSL -o ~/Downloads/diff-so-fancy
-
-    chmod +x ~/Downloads/diff-so-fancy
-    mkdir -p ~/.local/bin
-    mv ~/Downloads/diff-so-fancy ~/.local/bin/diff-so-fancy
-# else 
-    # echo "diff-so-fancy is already installed, to update remove it first and run this script again"
+if has_binary $APP; then
+    exit 0
 fi
+
+# A perl script, so there is nothing arch-specific to choose.
+URL=$(github_asset_url so-fancy/$APP "$APP")
+
+if [ -z "$URL" ]; then
+    echo "No $APP release asset found"
+    exit 1
+fi
+
+download_to ~/Downloads/$APP "$URL"
+chmod +x ~/Downloads/$APP
+mkdir -p ~/.local/bin
+mv -f ~/Downloads/$APP ~/.local/bin/$APP

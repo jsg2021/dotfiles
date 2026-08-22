@@ -3,8 +3,8 @@
 set -e
 
 DIR=$(dirname -- "$(readlink -f -- "$0")")
-source $DIR/helpers
-if [ command -v docker &> /dev/null ]; then
+source "$DIR/helpers"
+if has_binary docker; then
     echo "Docker is already installed. Skipping installation."
     exit 0
 fi
@@ -31,7 +31,7 @@ case $(get_distro_id) in
         sudo systemctl enable --now docker
         ;;
     darwin)
-        open https://desktop.docker.com/mac/main/arm64/Docker.dmg
+        open "https://desktop.docker.com/mac/main/$(arch_for go)/Docker.dmg"
         exit 0;
         ;;
     *)

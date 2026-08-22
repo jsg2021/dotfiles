@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 PLATFORM=macos
 if [[ "$OSTYPE" != "darwin"* ]]; then
   exit 0;

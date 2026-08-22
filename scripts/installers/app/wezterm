@@ -3,26 +3,71 @@
 set -e
 
 DIR=$(dirname -- "$(readlink -f -- "$0")")
-source $DIR/../helpers
+source "$DIR/../helpers"
 
-case $(get_distro_id) in
+DISTRO=$(get_distro_id)
+
+case $DISTRO in
     darwin)
-        brew install --cask wezterm        
+        brew install --cask wezterm
+        exit 0
         ;;
-    fedora|\
-    debian|\
-    ubuntu)
-        mkdir -p ~/Downloads
-        mkdir -p ~/.local/bin
-        API="https://api.github.com/repos/wezterm/wezterm/releases/latest"
-        curl -sL -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" $API \
-            | jq -r ".assets[] | select(.name | endswith(\"AppImage\")) | .browser_download_url" \
-            | xargs curl -fsSL -o ~/Downloads/wezterm.AppImage
-        chmod +x ~/Downloads/wezterm.AppImage
-        mv -f ~/Downloads/wezterm.AppImage ~/.local/bin/wezterm
-        ;;
+    fedora|debian|ubuntu) ;;
     *)
-        echo "...skipping wezterm installation $(get_distro_id)"
+        echo "...skipping wezterm installation $DISTRO"
         exit 0
         ;;
 esac
+
+# Upstream builds the AppImage on x86_64 only. Other arches get .deb packages,
+# so an AppImage download would hand an arm64 box an x86_64 binary.
+if [ "$(arch_for uname)" = "x86_64" ]; then
+
+    URL=$(github_asset_url wezterm/wezterm ".AppImage")
+
+    if [ -z "$URL" ]; then
+        echo "...skipping wezterm: no x86_64 AppImage in the latest release"
+        exit 0
+    fi
+
+    download_to ~/Downloads/wezterm.AppImage "$URL"
+    chmod +x ~/Downloads/wezterm.AppImage
+    mkdir -p ~/.local/bin
+    mv -f ~/Downloads/wezterm.AppImage ~/.local/bin/wezterm
+
+elif has_binary apt-get; then
+
+    # Assets are tagged with the distro they were built on, e.g.
+    # wezterm-<ver>.Debian12.arm64.deb. Prefer a build for this release, then
+    # settle for any build of the right arch.
+    ARCH=$(arch_for go)
+    VERSION_ID=$(awk -F= '/^VERSION_ID=/{gsub(/"/,"",$2); print $2}' /etc/os-release 2>/dev/null)
+
+    case "$DISTRO" in
+        debian) TAG=".Debian${VERSION_ID%%.*}.$ARCH.deb" ;;
+        ubuntu) TAG=".Ubuntu${VERSION_ID}.$ARCH.deb" ;;
+        *)      TAG="" ;;
+    esac
+
+    URL=''
+    if [ -n "$TAG" ]; then
+        URL=$(github_asset_url wezterm/wezterm "$TAG")
+    fi
+    if [ -z "$URL" ]; then
+        URL=$(github_asset_url wezterm/wezterm "$ARCH.deb")
+    fi
+
+    if [ -z "$URL" ]; then
+        echo "...skipping wezterm: no $ARCH .deb in the latest release"
+        exit 0
+    fi
+
+    download_to ~/Downloads/wezterm.deb "$URL"
+    sudo apt-get update
+    sudo apt-get install -y ~/Downloads/wezterm.deb
+    rm -f ~/Downloads/wezterm.deb
+
+else
+    echo "...skipping wezterm: no $(arch_for uname) build available for $DISTRO"
+    exit 0
+fi

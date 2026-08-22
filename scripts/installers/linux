@@ -7,4 +7,4 @@ source $DIR/helpers
 
 install_my_tool xclip xsel
 
-sh $DIR/tools
+"$DIR/tools"

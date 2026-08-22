@@ -3,17 +3,17 @@
 set -e
 
 DIR=$(dirname -- "$(readlink -f -- "$0")")
-source $DIR/helpers
+source "$DIR/helpers"
 
-sh $DIR/apps
+"$DIR/apps"
 
 install_my_tool bat fzf fd lsd entr rg stow zoxide tmux nvim delta diffnav diff-so-fancy
 
-if ! command -v fnm &>/dev/null; then
+if ! has_binary fnm; then
     curl -fsSLf https://fnm.vercel.app/install | bash
 fi
 
-if ! command -v atuin &>/dev/null; then
+if ! has_binary atuin; then
     curl -LsSLf https://github.com/atuinsh/atuin/releases/latest/download/atuin-installer.sh | sh
 fi
 
