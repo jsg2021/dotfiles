@@ -10,10 +10,7 @@ fi
 # Source/Load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
-source ~/.dotfiles/configs/shell/vars
-source ~/.dotfiles/configs/shell/aliases
-
-source ~/.dotfiles/configs/shell/prompt
+source ~/.dotfiles/configs/shell/entry
 
 # Add in zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting

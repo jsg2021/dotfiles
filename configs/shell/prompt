@@ -1,27 +1,27 @@
-#oh-my-posh seems to be broken on bash?
-if [ "$shell" = "bash" ]; then
-  
-if ! command -v starship &>/dev/null; then
-  sh -c "$(curl -fsSL https://starship.rs/install.sh)"
-fi
-
-eval "$(starship init $shell)"
-
+if [ -z "$shell" ]; then
+  echo "skipping prompt setup because shell is unset"
 else
 
-if ! command -v oh-my-posh &>/dev/null; then
-  sh -c "$(curl -fsSL https://ohmyposh.dev/install.sh)"
-fi
+# oh-my-posh seems to be broken on bash?
+# if [ "$shell" = "bash" ]; then   
+#  if ! command -v starship &>/dev/null; then
+#    sh -c "$(curl -fsSL https://starship.rs/install.sh)"
+#  fi
+#  eval "$(starship init $shell)"
+# else
 
-eval "$(oh-my-posh init $shell --config ~/.config/oh-my-posh.toml)"
+  if ! command -v oh-my-posh &>/dev/null; then
+    sh -c "$(curl -fsSL https://ohmyposh.dev/install.sh)"
+  fi
 
-# Show today's Claude Code usage in the prompt via $CCUSAGE_TODAY (an oh-my-posh text
-# segment reads it). ccusage is slow, so ccusage-usage.sh serves a ~60s cache and
-# refreshes in the background, keeping this precmd hook fast.
-if [ -n "$ZSH_VERSION" ]; then
-  autoload -Uz add-zsh-hook
-  _ccusage_precmd() { export CCUSAGE_TODAY="$(bash ~/.config/ohmyposh/ccusage-usage.sh 2>/dev/null)"; }
-  add-zsh-hook precmd _ccusage_precmd
-fi
+  eval "$(oh-my-posh init $shell --config ~/.config/oh-my-posh.toml)"
 
+  # Show today's Claude Code usage in the prompt via $CCUSAGE_TODAY (an oh-my-posh text
+  # segment reads it). ccusage is slow, so ccusage-usage.sh serves a ~60s cache and
+  # refreshes in the background, keeping this precmd hook fast.
+  if [ -n "$ZSH_VERSION" ]; then # only in zsh
+    autoload -Uz add-zsh-hook
+    _ccusage_precmd() { export CCUSAGE_TODAY="$(bash ~/.config/ohmyposh/ccusage-usage.sh 2>/dev/null)"; }
+    add-zsh-hook precmd _ccusage_precmd
+  fi
 fi

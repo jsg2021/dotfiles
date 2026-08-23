@@ -1,0 +1,5 @@
+source ~/.dotfiles/configs/shell/resolve-shell.sh
+
+source ~/.dotfiles/configs/shell/vars
+source ~/.dotfiles/configs/shell/aliases
+source ~/.dotfiles/configs/shell/prompt
